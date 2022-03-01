@@ -6,7 +6,7 @@
   <link href="https://h0ld1rs.github.io/atom.xml" rel="self"/>
   
   <link href="https://h0ld1rs.github.io/"/>
-  <updated>2022-03-01T03:35:25.352Z</updated>
+  <updated>2022-03-01T10:47:40.396Z</updated>
   <id>https://h0ld1rs.github.io/</id>
   
   <author>
@@ -17,64 +17,23 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>123456</title>
-    <link href="https://h0ld1rs.github.io/posts/10724.html"/>
-    <id>https://h0ld1rs.github.io/posts/10724.html</id>
-    <published>2022-03-01T03:34:40.000Z</published>
-    <updated>2022-03-01T03:35:25.352Z</updated>
+    <title>博客搭建</title>
+    <link href="https://h0ld1rs.github.io/posts/26832.html"/>
+    <id>https://h0ld1rs.github.io/posts/26832.html</id>
+    <published>2022-03-01T10:46:08.000Z</published>
+    <updated>2022-03-01T10:47:40.396Z</updated>
     
-    <content type="html"><![CDATA[<p>12313212313213212154646545</p>]]></content>
-    
-    
-    <summary type="html">我的</summary>
+    <content type="html"><![CDATA[<h1 id="懒人搭建博客"><a href="#懒人搭建博客" class="headerlink" title="懒人搭建博客"></a>懒人搭建博客</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近想重启博客这个东西，发一些自己写的笔记啥的，由于重装系统之后之前的东西都不见了，所以，，还得重新来一下(xdm，一定要做好备份啊，不要憨憨的不备份重装系统)</p><p>搭建其实还是使用最简单的<code>hexo + butterfly</code>搭建的，没有什么难点，主要是遇到了一个在<code>butterfly</code>主题修改<code>_config.yml</code>的时候，有一个背景图片始终无法加载成功，但是在本地预览的时候是可以正常访问的，在<code>hexo d</code>后则是不能访问，在把<code>public</code>文件夹放置公网后发现，发现应该是<code>nodejs</code>版本的问题，最后解决成功了，，(菜鸡花了两天时间)</p><p>这里就放一下用到的命令和对应的版本吧</p><blockquote><p>#需要安装的东西<br>npm install –save hexo-deployer-git<br>npm install –save hexo-renderer-jade hexo-generator-feed hexo-generator-sitemap hexo-browsersync hexo-generator-archive</p><p>#主题</p><p>git clone -b master <a href="https://github.com/jerryc127/hexo-theme-butterfly.git">https://github.com/jerryc127/hexo-theme-butterfly.git</a> themes&#x2F;Butterfly</p><p>#环境</p><p>npm 8.3.1<br>node v16.14.0<br>hexo-cli: 4.3.0<br>os: win32 10.0.22000<br>node: 16.14.0<br>v8: 9.4.146.24-node.20<br>uv: 1.43.0<br>zlib: 1.2.11<br>brotli: 1.0.9<br>ares: 1.18.1<br>modules: 93<br>nghttp2: 1.45.1<br>napi: 8<br>llhttp: 6.0.4<br>openssl: 1.1.1m+quic<br>cldr: 40.0<br>icu: 70.1<br>tz: 2021a3<br>unicode: 14.0<br>ngtcp2: 0.1.0-DEV<br>nghttp3: 0.1.0-DEV</p></blockquote><p>新手搭建博客请看：<a href="https://yafine-blog.cn/posts/4ab2.html">https://yafine-blog.cn/posts/4ab2.html</a></p><p>nodejs 使用了某文章师傅提到的<code>nvm</code>，有兴趣的师傅可以了解一下，和<code>jenv</code>差不多效果的东西</p><p><img src="https://cdn.jsdelivr.net/gh/h0ld1rs/image/image/20220301100318.png"></p><h2 id="图片问题"><a href="#图片问题" class="headerlink" title="图片问题"></a>图片问题</h2><p>解决图片我使用了<code>picgo</code>，可以直接转换成<code>markdown</code>形式的图片</p><p><img src="https://cdn.jsdelivr.net/gh/h0ld1rs/image/image/20220301112311.png"></p><h2 id="后端评论区通知"><a href="#后端评论区通知" class="headerlink" title="后端评论区通知"></a>后端评论区通知</h2><p>这里试了好些方法，有下面几位师傅的链接</p><p><code>Valine</code> :  <a href="https://blog.csdn.net/weixin_34434736/article/details/113047474">https://blog.csdn.net/weixin_34434736/article/details/113047474</a></p><p>​            <a href="https://blog.lete114.top/article/Valine-LeanCloud-Config.html">https://blog.lete114.top/article/Valine-LeanCloud-Config.html</a></p><p>​    使用这种方法应该不错，但是我又找了找，选择了另外一种方法</p><p><code>Twikoo+腾讯云评论配置</code>：这个我选择了<code>Server酱</code>发送消息</p><p>​    <a href="https://xiaoliblog.cn/page/comments.html#%E8%A7%86%E9%A2%91%E8%A7%82%E7%9C%8B">https://xiaoliblog.cn/page/comments.html#%E8%A7%86%E9%A2%91%E8%A7%82%E7%9C%8B</a></p><p>整体来说比较简单，效果也很好</p><p><img src="https://cdn.jsdelivr.net/gh/h0ld1rs/image/image/20220301095948.jpg"></p><p><img src="https://cdn.jsdelivr.net/gh/h0ld1rs/image/image/20220301100017.png"></p><h2 id="url优化"><a href="#url优化" class="headerlink" title="url优化"></a>url优化</h2><p>一般来说，SEO搜索引擎优化认为，网站的最佳结构是 <strong>用户从首页点击三次就可以到达任何一个页面</strong>，但是我们使用<code>Hexo</code>编译的站点结构的<code>URL</code>是：<code>域名/年/月/日/文章标题</code>四层的结构，这样的<code>URL</code>结构很不利于<code>SEO</code>，爬虫就会经常爬不到我们的文章，于是，我们需要优化一下网站文章的<code>URL</code></p><h3 id="方案一："><a href="#方案一：" class="headerlink" title="方案一："></a><strong>方案一</strong>：</h3><p>直接改成<code>域名/文章标题</code>的形式，在<code>Hexo配置文件</code>中修改<code>permalink</code>如下：</p><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># URL</span></span><br><span class="line"><span class="comment">## If your site is put in a subdirectory, set url as &#x27;http://yoursite.com/child&#x27; and root as &#x27;/child/&#x27;</span></span><br><span class="line"><span class="attr">url:</span> <span class="string">https://blog.sky03.cn</span></span><br><span class="line"><span class="attr">root:</span> <span class="string">/</span></span><br><span class="line"><span class="attr">permalink:</span> <span class="string">:title.html</span></span><br><span class="line"><span class="attr">permalink_defaults:</span></span><br></pre></td></tr></table></figure><p><strong>这个方式有个不好的地方：</strong></p><p>直接以<code>文章的标题</code>作为URL，而我们所写的文章的标题一般都是中文，但是URL只能用字母数字和标点符号表示，所以中文的URL只能被转义成一堆符号，而且还特别长。</p><h3 id="方案二"><a href="#方案二" class="headerlink" title="方案二"></a>方案二</h3><p>插件</p><p>插件作用：自动为每篇文章生成一串数字作每篇文章的URI地址。每篇文章的<code>Front-matter</code>中会自动增加一个配置项：<code>abbrlink: xxxxx</code>，该项的值就是当前文章的URI地址。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-abbrlink --save</span><br></pre></td></tr></table></figure><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># hexo-abbrlink config 、固定文章地址插件</span></span><br><span class="line"><span class="attr">abbrlink:</span></span><br><span class="line">  <span class="attr">alg:</span> <span class="string">crc16</span>  <span class="comment">#算法选项：crc16、crc32，区别见之前的文章，这里默认为crc16丨crc32比crc16复杂一点，长一点</span></span><br><span class="line">  <span class="attr">rep:</span> <span class="string">dec</span>    <span class="comment">#输出进制：十进制和十六进制，默认为10进制。丨dec为十进制，hex为十六进制</span></span><br></pre></td></tr></table></figure><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># URL</span></span><br><span class="line"><span class="comment">## If your site is put in a subdirectory, set url as &#x27;http://yoursite.com/child&#x27; and root as &#x27;/child/&#x27;</span></span><br><span class="line"><span class="attr">url:</span> <span class="string">https://blog.sky03.cn</span></span><br><span class="line"><span class="attr">root:</span> <span class="string">/</span></span><br><span class="line"><span class="attr">permalink:</span> <span class="string">posts/:abbrlink.html</span></span><br><span class="line"><span class="attr">permalink_defaults:</span></span><br></pre></td></tr></table></figure><h2 id="被谷歌和百度收录"><a href="#被谷歌和百度收录" class="headerlink" title="被谷歌和百度收录"></a>被谷歌和百度收录</h2><p>参考文章：<a href="https://blog.sky03.cn/posts/42790.html#toc-heading-25">https://blog.sky03.cn/posts/42790.html#toc-heading-25</a></p><p>谷歌好说，在谷歌网站站长把<code>github page</code>收录进去即可（<a href="https://search.google.com/search-console?%EF%BC%89">https://search.google.com/search-console?）</a></p><p><img src="https://cdn.jsdelivr.net/gh/h0ld1rs/image/image/20220301112215.png"></p><p><del>百度的话，(如果没有域名)目前为止好像很麻烦，就不弄了。</del></p><p>好像，，现在可以了？？，和谷歌收录的方法一样。</p><p><img src="https://cdn.jsdelivr.net/gh/h0ld1rs/image/image/20220301150646.png"></p><p>那就等第二天过来看吧，，(百度搜索资源平台)</p><h2 id="提交"><a href="#提交" class="headerlink" title="提交"></a>提交</h2><ol><li>自动提交（分三种）<ul><li>主动推送</li><li>自动推送</li><li>sitemap（站点地图）</li></ul></li><li>手动提交<ul><li>即手动地将链接一次性提交给百度</li></ul></li></ol><p>一般自动提交比手动提交效果好一点，自动提交又从效率上来说：</p><p><strong>主动推送&gt;自动推送&gt;sitemap</strong></p><h3 id="自动提交的三种方法"><a href="#自动提交的三种方法" class="headerlink" title="自动提交的三种方法"></a>自动提交的三种方法</h3><ol><li><code>主动推送</code>：最为快速的提交方式。将站点当天新产出链接通过此方式推送给百度，以保证新链接可以及时被百度收录。</li><li><code>自动推送</code>：最为便捷的提交方式。将自动推送的JS代码部署在站点的每一个页面源代码中，当部署代码的页面在每次被浏览时，链接就会被自动推送给百度。可以与主动推送配合使用。</li><li><code>sitemap</code>：您可以定期将网站链接放到<code>sitemap文件</code>中，然后将<code>sitemap文件</code>提交给百度。百度会周期性的抓取检查您提交的<code>sitemap</code>，对其中的链接进行处理，但收录速度慢于主动推送。</li></ol><p>这里我选择主动推送，安装插件</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-baidu-url-submit --save</span><br></pre></td></tr></table></figure><p>然后打开<code>hexo配置文件</code>，在末尾加入以下配置：</p><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># hexo-baidu-url-submit  百度主动推送</span></span><br><span class="line"><span class="attr">baidu_url_submit:</span></span><br><span class="line">  <span class="attr">count:</span> <span class="number">80</span> <span class="comment"># 提交最新的一个链接</span></span><br><span class="line">  <span class="attr">host:</span> <span class="string">blog.sky03.cn</span> <span class="comment"># 在百度站长平台中注册的域名</span></span><br><span class="line">  <span class="attr">token:</span> <span class="string">xxxxxxx</span> <span class="comment"># 请注意这是您的秘钥， 所以请不要把博客源代码发布在公众仓库里!</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">baidu_urls.txt</span> <span class="comment"># 文本文档的地址， 新链接会保存在此文本文档里</span></span><br></pre></td></tr></table></figure><p>再加入新的<code>deploy</code>：</p><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">type:</span> <span class="string">baidu_url_submitter</span></span><br></pre></td></tr></table></figure><p>到这里就完成了，，，等待明天的收录审核</p>]]></content>
     
     
-    
-    <category term="java" scheme="https://h0ld1rs.github.io/categories/java/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>123</title>
-    <link href="https://h0ld1rs.github.io/posts/47623.html"/>
-    <id>https://h0ld1rs.github.io/posts/47623.html</id>
-    <published>2022-02-28T02:42:42.000Z</published>
-    <updated>2022-03-01T10:10:24.985Z</updated>
-    
-    <content type="html"><![CDATA[<p>1231321232</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;1231321232&lt;/p&gt;
-</summary>
-      
+    <summary type="html">重新打算开启博客，往上放电有用的东西</summary>
     
     
     
-    
-    <category term="123" scheme="https://h0ld1rs.github.io/tags/123/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Hello World</title>
-    <link href="https://h0ld1rs.github.io/posts/undefined.html"/>
-    <id>https://h0ld1rs.github.io/posts/undefined.html</id>
-    <published>2022-02-28T00:35:25.422Z</published>
-    <updated>2022-02-28T00:35:25.422Z</updated>
-    
-    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
+    <category term="奇奇怪怪" scheme="https://h0ld1rs.github.io/categories/%E5%A5%87%E5%A5%87%E6%80%AA%E6%80%AA/"/>
     
     
-      
-      
-    <summary type="html">&lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.io/docs/&quot;&gt;documentation&lt;/a&gt; for</summary>
-      
-    
-    
-    
+    <category term="博客搭建" scheme="https://h0ld1rs.github.io/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/"/>
     
   </entry>
   
