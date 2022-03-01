@@ -1,0 +1,294 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Go渗透测试笔记(一) | h0ld1rs的博客</title><meta name="keywords" content="Golang,渗透测试"><meta name="author" content="h0ld1rs"><meta name="copyright" content="h0ld1rs"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="正在学习golang语言的一些笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go渗透测试笔记(一)">
+<meta property="og:url" content="https://h0ld1rs.github.io/posts/61606.html">
+<meta property="og:site_name" content="h0ld1rs的博客">
+<meta property="og:description" content="正在学习golang语言的一些笔记">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://h0ld1rs.github.io/img/image/2.png">
+<meta property="article:published_time" content="2022-03-01T13:34:41.000Z">
+<meta property="article:modified_time" content="2022-03-01T13:45:10.833Z">
+<meta property="article:author" content="h0ld1rs">
+<meta property="article:tag" content="Golang,渗透测试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://h0ld1rs.github.io/img/image/2.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://h0ld1rs.github.io/posts/61606"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Go渗透测试笔记(一)',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-03-01 21:45:10'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="h0ld1rs的博客" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/1.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">4</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">2</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 目录</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/image/2.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">h0ld1rs的博客</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 目录</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Go渗透测试笔记(一)</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-03-01T13:34:41.000Z" title="发表于 2022-03-01 21:34:41">2022-03-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-01T13:45:10.833Z" title="更新于 2022-03-01 21:45:10">2022-03-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Go%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">Go渗透测试</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Go渗透测试笔记(一)"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/posts/61606.html#post-comment"><span id="twikoo-count"></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="GO渗透测试笔记-一）"><a href="#GO渗透测试笔记-一）" class="headerlink" title="GO渗透测试笔记(一）"></a>GO渗透测试笔记(一）</h1><h1 id="0X01-基本使用"><a href="#0X01-基本使用" class="headerlink" title="0X01 基本使用"></a>0X01 基本使用</h1><ol>
+<li><p>当在某些极端的情况可以使用<code>go build -ldflags &quot;-w -s&quot;</code>进行编译，从二进制文件中剥离调试信息和字符表，从而减少文件的大小，适合在某些极端的情况进行嵌入（大约可以减少 30%）</p>
+</li>
+<li><p>创建使用不同架构上使用的二进制文件—<strong>交叉编译</strong></p>
+</li>
+<li><p>go doc 函数 –&gt;可以查询有关的包，函数的使用方法文档</p>
+</li>
+<li><p>go get —-&gt;  很多情况下，go程序需要要引入第三方包，可以使用此命令进行导入</p>
+<blockquote>
+<p>即使你使用了 import 导入了相应的包，如<code>stacktian/ldapauth</code>，也无法访问。必须先下载实际的包，</p>
+<p>go get “github.com&#x2F;stacktian&#x2F;ldapauth” 下载实际的包，并且放在 $GOPATH&#x2F;SRC目录下</p>
+</blockquote>
+</li>
+<li><p>go 引入了两个工具<code>dep和mod</code>来锁定清理依赖项，有助于避免正在进行的依赖项不一致</p>
+<blockquote>
+<p>go mod tidy</p>
+<p>go mod download 是使用mod时经常使用的两个命令</p>
+</blockquote>
+</li>
+<li><p>go fmt –&gt;可以自动格式化源代码，强制使用正确的换行符，缩进和大括号来设置代码样式。—&gt;大部分IDE包含的钩子会在保存文件时自动执行 go fmt，因此无需显式执行该命令</p>
+</li>
+<li><p>golint 和 go vet命令</p>
+<blockquote>
+<p>go fmt 会更改代码的语法样式，但是golint会报告样式错误，例如缺少注释，不遵循约定的变量命名等，无用的类型等等。</p>
+<p>golint时独立工具，需要 go get -u “golang.org&#x2F;x&#x2F;lint&#x2F;golint”进行下载</p>
+<p>go vet 也会尝试确定编译器中可能忽略的问题，其中一些可能是合法的错误</p>
+</blockquote>
+</li>
+<li><p>GO Playground -&gt; 托管的执行环境，为开发人员提供了稳定的web前端，以快速，测试，执行和共享Go代码段，但是会限制使用系统命令和第三方交互</p>
+</li>
+</ol>
+<h2 id="go-的基本语法"><a href="#go-的基本语法" class="headerlink" title="go 的基本语法"></a>go 的基本语法</h2><h4 id="1-结构体和接口"><a href="#1-结构体和接口" class="headerlink" title="1. 结构体和接口"></a>1. 结构体和接口</h4><p>定义如下方法</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Person <span class="keyword">struct</span> &#123;</span><br><span class="line">	Name <span class="type">string</span></span><br><span class="line">	Age <span class="type">int</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(p * Person)</span></span> sayHello()  &#123;</span><br><span class="line">	fmt.Println(<span class="string">&quot;hello&quot;</span>,p.Name)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> guy = <span class="built_in">new</span>(Person)</span><br><span class="line">	guy.Name = <span class="string">&quot;Dave&quot;</span></span><br><span class="line">	guy.Age = <span class="number">12</span></span><br><span class="line">	guy.sayHello()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此语言定义Person变量的方法，sayHello()，其他语言将p视为<code>self</code>与<code>this</code>的引用。</p>
+<blockquote>
+<p>于此同时，结构体缺少作用域修饰符(如 public ，private 等等)，</p>
+<p>Go语言中通过大写字母确定作用域，以大写字母开头的类型和字段可以在包外部进行导出并访问，以小写字母开头的类型和字段是私有的，只能在包内部访问</p>
+</blockquote>
+<p>引入接口时</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Person <span class="keyword">struct</span> &#123;</span><br><span class="line">	Name <span class="type">string</span></span><br><span class="line">	Age <span class="type">int</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(p * Person)</span></span> sayHello()  &#123;</span><br><span class="line">	fmt.Println(<span class="string">&quot;hello&quot;</span>,p.Name)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span>  Friend <span class="keyword">interface</span> &#123;</span><br><span class="line">	sayHello()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Greet</span><span class="params">(f Friend)</span></span>  &#123;</span><br><span class="line">	f.sayHello()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> guy = <span class="built_in">new</span>(Person)</span><br><span class="line">	guy.Name = <span class="string">&quot;Dave&quot;</span></span><br><span class="line">	Greet(guy)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>定义了名为<code>friend</code>的接口，该接口需要实现一个方法<code>sayHello</code>，这意味着任何实现了方法<code>sayHello()</code>类型的都是<code>Friend</code>，</p>
+<blockquote>
+<p>注意：Friend实际上并未实现这个函数，他只是说，如果你是Friend，则能够使用<code>sayHello</code></p>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Person <span class="keyword">struct</span> &#123;</span><br><span class="line">	Name <span class="type">string</span></span><br><span class="line">	Age <span class="type">int</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> Dog <span class="keyword">struct</span> &#123;</span><br><span class="line">	Name <span class="type">string</span></span><br><span class="line">	Age <span class="type">int</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(d *Dog)</span></span> sayHello() &#123;</span><br><span class="line">	fmt.Println(<span class="string">&quot;woof,woof&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(p * Person)</span></span> sayHello()  &#123;</span><br><span class="line">	fmt.Println(<span class="string">&quot;hello&quot;</span>,p.Name)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span>  Friend <span class="keyword">interface</span> &#123;</span><br><span class="line">	sayHello()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Greet</span><span class="params">(f Friend)</span></span>  &#123;</span><br><span class="line">	f.sayHello()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> guy = <span class="built_in">new</span>(Person)</span><br><span class="line">	guy.Name = <span class="string">&quot;Dave&quot;</span></span><br><span class="line">	Greet(guy)</span><br><span class="line">	<span class="keyword">var</span> dog = <span class="built_in">new</span> (Dog)</span><br><span class="line">	Greet(dog)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-控制结构"><a href="#2-控制结构" class="headerlink" title="2 控制结构"></a>2 控制结构</h4><p>Go 包含的控制结构比其他现代语言要少的多。Go主要的语法条件是<code>if/else</code></p>
+<p>用户输入的时候用<code>fmt.Scanln()</code>比较合适</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> x <span class="type">int</span></span><br><span class="line">	fmt.Println(<span class="string">&quot;请输入x&quot;</span>)</span><br><span class="line">	fmt.Scanln(&amp;x)</span><br><span class="line">	<span class="keyword">if</span> x==<span class="number">1</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;x is equals 1&quot;</span>)</span><br><span class="line">	&#125;<span class="keyword">else</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;x is not equals 1&quot;</span>)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>当使用switch结构的时候，Go语言必须使用花括号,与其他现代编程语言不同的是，go不需要包含<code>break</code>语句。在其他语言中当 case不包含<code>break</code>的时候，将持续执行，在<code>go</code>中只会执行一种语句</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	 <span class="keyword">var</span> x = <span class="string">&quot;foo&quot;</span></span><br><span class="line">	<span class="keyword">switch</span> x &#123;</span><br><span class="line">		<span class="keyword">case</span> <span class="string">&quot;foo&quot;</span>:</span><br><span class="line">			fmt.Println(<span class="string">&quot;fonud foo&quot;</span>);</span><br><span class="line">		<span class="keyword">case</span> <span class="string">&quot;bar&quot;</span>:</span><br><span class="line">			fmt.Println(<span class="string">&quot;fonud bar&quot;</span>);</span><br><span class="line">		<span class="keyword">default</span>:</span><br><span class="line">		fmt.Println(<span class="string">&quot;default&quot;</span>)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>Go有一个 <code>type switch</code>的特殊变体，通过<code>switch</code>语句进行类型断言，对判断类型接口很有用</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">foo</span><span class="params">(i <span class="keyword">interface</span>&#123;&#125;)</span></span>  &#123;</span><br><span class="line">	<span class="keyword">switch</span> i.(<span class="keyword">type</span>) &#123;</span><br><span class="line">	<span class="keyword">case</span> <span class="type">int</span>:</span><br><span class="line">		fmt.Println(<span class="string">&quot;int&quot;</span>)</span><br><span class="line">	<span class="keyword">case</span> <span class="type">string</span>:</span><br><span class="line">		fmt.Println(<span class="string">&quot;string&quot;</span>)</span><br><span class="line">	<span class="keyword">default</span>:</span><br><span class="line">		fmt.Println(<span class="string">&quot;unknown error&quot;</span>)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	foo(<span class="type">int</span>(<span class="number">64</span>))</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>本示例中使用特殊语法(i.type)检查 i 变量的类型，然后进行匹配</p>
+</blockquote>
+<p>最后一个流程控制是<code>for</code>循环，for循环是 Go用于执行重复代码的结构，Go没有诸如<code>do</code>或者<code>while</code>之类的约定</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">for</span> i:=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++ &#123;</span><br><span class="line">		fmt.Println(i)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>以下是 for循环的一个轻量级变体，用于遍历集合或者切片&#x2F;映射</p>
+<blockquote>
+<p>和python 一样，idx用于索引</p>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	nums :=[]<span class="type">int</span>&#123;<span class="number">2</span>,<span class="number">4</span>,<span class="number">6</span>,<span class="number">8</span>,<span class="number">10</span>&#125;</span><br><span class="line">	<span class="keyword">for</span> idx,val := <span class="keyword">range</span> nums&#123;</span><br><span class="line">		fmt.Println(idx+<span class="number">1</span>,val)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="3-并发"><a href="#3-并发" class="headerlink" title="3. 并发"></a>3. 并发</h4><p>go拥有比其他语言更为简单的并发模型，可以使用<code>gorountine</code>并发执行代码，因其是可以同时运行的函数或者方法，<code>gorountine</code>被称为轻量级线程，于实际线程相比，创建他们的成本极低</p>
+<p>可以通过在被调用的方法或者函数之前使用<code>go</code>关键字创建<code>gorountine</code>实现并发</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">	<span class="string">&quot;time&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">f</span><span class="params">()</span></span> &#123;</span><br><span class="line">	fmt.Println(<span class="string">&quot;f function&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">go</span> f()</span><br><span class="line">	time.Sleep(<span class="number">1</span> * time.Second)</span><br><span class="line">	fmt.Println(<span class="string">&quot;main function&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/h0ld1rs/image/image/20220219124257.png"></p>
+<p>在函数之前使用了<code>go</code>关键字，这将意味着程序同时运行f()和main()，换句话说：main()函数的执行将继续，而无需等待f()完成。当我们使用<code>time.Sleep</code>强制main函数暂停，以便f()可以执行完，如果不暂停main()函数，则该线程很可能在f()执行完毕之前就退出，将看不到其结果。</p>
+<p>go 具有一种称为<code>通道</code>（channel）的数据类型，该数据类型提供了一个机制，通过该机制，<code>gorountine</code>可以同步执行函数并且这些函数可以互相通信。下面的例子显示使用一个通道时显示不用字符串的长度及其总和的示例</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">strlen</span><span class="params">(s <span class="type">string</span>, c <span class="keyword">chan</span> <span class="type">int</span>)</span></span> &#123;</span><br><span class="line">	c &lt;- <span class="built_in">len</span>(s)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	c := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="type">int</span>)</span><br><span class="line">	<span class="keyword">go</span> strlen(<span class="string">&quot;Salutations&quot;</span>,c)</span><br><span class="line">	<span class="keyword">go</span> strlen(<span class="string">&quot;wolrd&quot;</span>,c)</span><br><span class="line">	x,y := &lt;-c,&lt;-c</span><br><span class="line">	fmt.Println(x,y,x+y)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>首先，定义并使用<code> chan int</code>类型的变量 c，你可以定义各种类型的通道，具体取决于通道传递的数据类型，你可以在<code>gorountine中</code>定义各种类型的通道，具体取决于要在通道传递的数据类型，上面的类型是要传递<code>int</code>类型的数据传长度。因此使用<code>int</code>类型的传递参数</p>
+<p>请注意一个新的运算符，<code>&lt;-</code>。该运算符只是数据时流入还是流出通道，你可以这样理解他，”将物品放在桶里或者取出一个物品”</p>
+<p><img src="https://cdn.jsdelivr.net/gh/h0ld1rs/image/image/20220219130532.png"></p>
+<p>结果是<code>5,6,11</code>，可以理解为是一个栈，将最先放进去放到最底部，取出最后放入的，所以才会出现这种情况。</p>
+<p>同时，从通道中取出数据则表明要取出足够的数据，否则会阻塞在这一行</p>
+<h4 id="4-错误处理"><a href="#4-错误处理" class="headerlink" title="4. 错误处理"></a>4. 错误处理</h4><p>与大多数现代编程语言不同，Go 没有<code>try/catch/finally</code>错误的处理语法。但是，它使用了一种更为简单的方法，鼓励你多去检查哪些容易出现错误的地方，这样他们就不会聚焦在调用链中。</p>
+<p>Go使用以下接口声明定义内置错误的类型</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="type">error</span> <span class="keyword">interface</span> &#123;</span><br><span class="line">	Error() <span class="type">string</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这意味着可以实现了方法Error()的任何数据类型，该方法返回字符串作为一个错误，例如，可以在代码中自定义错误</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;errors&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> myError <span class="type">string</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(e myError)</span></span>Error() <span class="type">string</span>  &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="type">string</span>(e)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">foo</span><span class="params">()</span></span> <span class="type">error</span>  &#123;</span><br><span class="line">	<span class="keyword">return</span> errors.New(<span class="string">&quot;some Error Occurred&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>  &#123;</span><br><span class="line">	<span class="keyword">if</span> err := foo(); err !=<span class="literal">nil</span>&#123;</span><br><span class="line">		<span class="comment">//处理错误的回显</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>你会发现函数和方法至少返回一个值是很普遍的，并且这些值中总会又一个返回值是错误的，在Go中如果返回错误值是<code>nil</code>,则表明函数未出现任何问题。</p>
+<blockquote>
+<p>go 语言中没有形成统一的错误记录方法，原因之一是，与其他语言不同，Go的内置错误类型没有隐式包含堆栈跟踪以帮助查明错误的上下文或者位置，</p>
+</blockquote>
+<h4 id="5-处理结构化数据"><a href="#5-处理结构化数据" class="headerlink" title="5. 处理结构化数据"></a>5. 处理结构化数据</h4><p>安全从业人员会预先编好处理结构挂数据或者具有通用编码的数据，如<code>JSON</code>,<code>xml</code></p>
+<p>最常见的两个包是<code>encoding/xml</code>和<code>encoding.json</code>，这两个包都可以组编和结组任意数据结构，这意味着他们可以将字符串转化为结构体，也可以将结构体序列化为字节切片，然后将字节切片反序列化为结构体</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;encoding/json&quot;</span></span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Foo02 <span class="keyword">struct</span> &#123;</span><br><span class="line">	Bar <span class="type">string</span></span><br><span class="line">	Baz <span class="type">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	f := Foo02&#123;<span class="string">&quot;h0ld1rs&quot;</span>,<span class="string">&quot;hello world&quot;</span>&#125;</span><br><span class="line">	b,_ := json.Marshal(f)</span><br><span class="line">	fmt.Println(<span class="type">string</span>(b))</span><br><span class="line">	err := json.Unmarshal(b, &amp;f)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> </span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>json.Marshal 将struct 编码为<code>JSON</code>，返回一个字节切片，随后将其打印到标准输出，显示的是Json形式的字节码形式</p>
+<p>json.Unmarshal(b,&amp;f)  将其进行解码，生成一个foo结构体实例。处理xml与此过程大致相同</p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/da486be83e8a">https://www.jianshu.com/p/da486be83e8a</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">h0ld1rs</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://h0ld1rs.github.io/posts/61606.html">https://h0ld1rs.github.io/posts/61606.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://h0ld1rs.github.io" target="_blank">h0ld1rs的博客</a>！</span></div></div><div class="tag_share"><div class="post_share"><div class="social-share" data-image="/img/image/2.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/31081.html"><img class="prev-cover" src="/img/image/3.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">go渗透测试笔记(二)</div></div></a></div><div class="next-post pull-right"><a href="/posts/26832.html"><img class="next-cover" src="/img/image/1.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">博客搭建</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/31081.html" title="go渗透测试笔记(二)"><img class="cover" src="/img/image/3.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-03-01</div><div class="title">go渗透测试笔记(二)</div></div></a></div><div><a href="/posts/32502.html" title="Go渗透测试笔记(三)"><img class="cover" src="/img/image/4.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-03-01</div><div class="title">Go渗透测试笔记(三)</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/1.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">h0ld1rs</div><div class="author-info__description">希望能认识更多师傅，学到更多东西</div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">4</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">2</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/h0ld1rs"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#GO%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E7%AC%94%E8%AE%B0-%E4%B8%80%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">GO渗透测试笔记(一）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0X01-%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="toc-number">2.</span> <span class="toc-text">0X01 基本使用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#go-%E7%9A%84%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="toc-number">2.1.</span> <span class="toc-text">go 的基本语法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E7%BB%93%E6%9E%84%E4%BD%93%E5%92%8C%E6%8E%A5%E5%8F%A3"><span class="toc-number">2.1.0.1.</span> <span class="toc-text">1. 结构体和接口</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E6%8E%A7%E5%88%B6%E7%BB%93%E6%9E%84"><span class="toc-number">2.1.0.2.</span> <span class="toc-text">2 控制结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E5%B9%B6%E5%8F%91"><span class="toc-number">2.1.0.3.</span> <span class="toc-text">3. 并发</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86"><span class="toc-number">2.1.0.4.</span> <span class="toc-text">4. 错误处理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-%E5%A4%84%E7%90%86%E7%BB%93%E6%9E%84%E5%8C%96%E6%95%B0%E6%8D%AE"><span class="toc-number">2.1.0.5.</span> <span class="toc-text">5. 处理结构化数据</span></a></li></ol></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/32502.html" title="Go渗透测试笔记(三)"><img src="/img/image/4.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go渗透测试笔记(三)"/></a><div class="content"><a class="title" href="/posts/32502.html" title="Go渗透测试笔记(三)">Go渗透测试笔记(三)</a><time datetime="2022-03-01T13:39:42.000Z" title="发表于 2022-03-01 21:39:42">2022-03-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/31081.html" title="go渗透测试笔记(二)"><img src="/img/image/3.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="go渗透测试笔记(二)"/></a><div class="content"><a class="title" href="/posts/31081.html" title="go渗透测试笔记(二)">go渗透测试笔记(二)</a><time datetime="2022-03-01T13:37:21.000Z" title="发表于 2022-03-01 21:37:21">2022-03-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/61606.html" title="Go渗透测试笔记(一)"><img src="/img/image/2.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go渗透测试笔记(一)"/></a><div class="content"><a class="title" href="/posts/61606.html" title="Go渗透测试笔记(一)">Go渗透测试笔记(一)</a><time datetime="2022-03-01T13:34:41.000Z" title="发表于 2022-03-01 21:34:41">2022-03-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/26832.html" title="博客搭建"><img src="/img/image/1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="博客搭建"/></a><div class="content"><a class="title" href="/posts/26832.html" title="博客搭建">博客搭建</a><time datetime="2022-03-01T10:46:08.000Z" title="发表于 2022-03-01 18:46:08">2022-03-01</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/img/image/2.png')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By h0ld1rs</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"><script>(()=>{
+  const init = () => {
+    twikoo.init(Object.assign({
+      el: '#twikoo-wrap',
+      envId: 'commnet-1gmkug2k1ca99452',
+      region: '',
+      onCommentLoaded: function () {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.vemoji)'))
+      }
+    }, null))
+  }
+
+  const getCount = () => {
+    twikoo.getCommentsCount({
+      envId: 'commnet-1gmkug2k1ca99452',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(function (res) {
+      document.getElementById('twikoo-count').innerText = res[0].count
+    }).catch(function (err) {
+      console.error(err);
+    });
+  }
+
+  const runFn = () => {
+    init()
+    GLOBAL_CONFIG_SITE.isPost && getCount()
+  }
+
+  const loadTwikoo = () => {
+    if (typeof twikoo === 'object') {
+      setTimeout(runFn,0)
+      return
+    } 
+    getScript('https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js').then(runFn)
+  }
+
+  if ('Twikoo' === 'Twikoo' || !false) {
+    if (false) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = () => {
+      loadTwikoo()
+    }
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
