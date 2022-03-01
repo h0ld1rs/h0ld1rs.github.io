@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://h0ld1rs.github.io/posts/10724.html</loc>
+    <loc>https://h0ld1rs.github.io/tags/index.html</loc>
     
     <lastmod>2022-03-01</lastmod>
     
@@ -11,9 +11,18 @@
   </url>
   
   <url>
-    <loc>https://h0ld1rs.github.io/posts/undefined.html</loc>
+    <loc>https://h0ld1rs.github.io/posts/47623.html</loc>
     
-    <lastmod>2022-02-28</lastmod>
+    <lastmod>2022-03-01</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://h0ld1rs.github.io/posts/10724.html</loc>
+    
+    <lastmod>2022-03-01</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -54,6 +63,13 @@
     <priority>1.0</priority>
   </url>
 
+  
+  <url>
+    <loc>https://h0ld1rs.github.io/tags/123/</loc>
+    <lastmod>2022-03-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
   
 
   
