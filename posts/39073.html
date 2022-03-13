@@ -1,0 +1,393 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>java安全入门(一) | h0ld1rs的博客</title><meta name="keywords" content="java安全"><meta name="author" content="h0ld1rs"><meta name="copyright" content="h0ld1rs"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="对java安全的一些入门理解">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java安全入门(一)">
+<meta property="og:url" content="https://h0ld1rs.github.io/posts/39073.html">
+<meta property="og:site_name" content="h0ld1rs的博客">
+<meta property="og:description" content="对java安全的一些入门理解">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://h0ld1rs.github.io/img/image/10.png">
+<meta property="article:published_time" content="2022-01-13T15:46:31.000Z">
+<meta property="article:modified_time" content="2022-03-13T15:48:31.085Z">
+<meta property="article:author" content="h0ld1rs">
+<meta property="article:tag" content="java安全">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://h0ld1rs.github.io/img/image/10.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://h0ld1rs.github.io/posts/39073"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'java安全入门(一)',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-03-13 23:48:31'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="h0ld1rs的博客" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/1.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">13</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 目录</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/image/10.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">h0ld1rs的博客</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 目录</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">java安全入门(一)</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-01-13T15:46:31.000Z" title="发表于 2022-01-13 23:46:31">2022-01-13</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-13T15:48:31.085Z" title="更新于 2022-03-13 23:48:31">2022-03-13</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/java%E5%AE%89%E5%85%A8/">java安全</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="java安全入门(一)"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/posts/39073.html#post-comment"><span id="twikoo-count"></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="java安全入门-一"><a href="#java安全入门-一" class="headerlink" title="java安全入门(一)"></a>java安全入门(一)</h1><p>首先，我们需要了解java得基本语法，没有了解得同学，建议学习完java得基本语法之后，再来学习</p>
+<h2 id="编译型语言和解释性语言"><a href="#编译型语言和解释性语言" class="headerlink" title="编译型语言和解释性语言"></a>编译型语言和解释性语言</h2><p>大家之前都或多或少接触过python与php，刚开始可能接触过一些C，但是其实这几种是不同的语言</p>
+<ul>
+<li>有的编程语言要求必须提前将所有源代码一次性转换成二进制指令，也就是生成一个可执行程序（Windows 下的 .exe），比如C语言、C++、Golang、Pascal（Delphi）、汇编等，这种编程语言称为编译型语言，使用的转换工具称为编译器</li>
+<li>有的编程语言可以一边执行一边转换，需要哪些源代码就转换哪些源代码，不会生成可执行程序，比如 Python、JavaScript、PHP、Shell、MATLAB等，这种编程语言称为解释型语言，使用的转换工具称为解释器。</li>
+</ul>
+<blockquote>
+<p>简单理解，编译器就是一个“翻译工具”，类似于将中文翻译成英文、将英文翻译成俄文。但是，翻译源代码是一个复杂的过程，大致包括词法分析、语法分析、语义分析、性能优化、生成可执行文件等五个步骤，期间涉及到复杂的算法和硬件架构。解释器也是一样，可以参考《编译原理》</p>
+</blockquote>
+<p>但是，我们要学的<code>java</code>和<code>c#</code>属于<code>半编译半解释型</code>的语言，</p>
+<p>根据这种特性，源代码需要先转换成一种中间文件（字节码文件），然后再将中间文件拿到虚拟机中执行。Java 引领了这种风潮，它的初衷是在跨平台的同时兼顾执行效率；C# 是后来的跟随者，但是 C# 一直止步于 Windows 平台。</p>
+<p>下面用一张图来说明一下</p>
+<p><img src="http://c.biancheng.net/uploads/allimg/191231/1-1912311J415L7.gif" alt="编译型语言和解释型语言的执行流程"></p>
+<p>我们学习php的时候，最核心的一步其实是命令执行，只有RCE成功，我们才算真正拿下了这台主机，所以，java这里，我们先学习一下命令执行。</p>
+<h2 id="反射"><a href="#反射" class="headerlink" title="反射"></a>反射</h2><h3 id="我们为什么必须使用反射"><a href="#我们为什么必须使用反射" class="headerlink" title="我们为什么必须使用反射"></a>我们为什么必须使用反射</h3><p>回想一下 java 中的基本操作，我们可以知道，类是对象的模板，对象是类的实例。一般我们都使用new的方式来创建一个对象，比如</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Student</span> <span class="variable">stu1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Student</span>();</span><br><span class="line"><span class="comment">//假设定义类之后，进行无参构造</span></span><br></pre></td></tr></table></figure>
+
+<p>那么，反射，为什么需要反射呢？</p>
+<blockquote>
+<p>java有四个基本特征，封装，继承，多态，抽象</p>
+<p>Java的反射（reflection）机制是指在程序的运行状态中，可以构造任意一个类的对象，可以了解任意一个对象所属的类，可以了解任意一个类的成员变量和方法，可以调用任意一个对象的属性和方法。本质上其实就是动态的生成类似于上述的字节码，加载到jvm中运行</p>
+</blockquote>
+<p><strong>关键点：动态获取</strong></p>
+<h3 id="反射获取对象"><a href="#反射获取对象" class="headerlink" title="反射获取对象"></a>反射获取对象</h3><p>正常的new对象的过程如下，我们可以看到，首先编译出了Student的类，而Student.class 经过JVM的内存中，就始终存在一个（一个类只会存在一个class对象），</p>
+<p><img src="https://cdn.jsdelivr.net/gh/h0ld1rs/image/image/20220115014839.png"></p>
+<p>补一张jvm的图</p>
+<p><img src="https://pic4.zhimg.com/80/v2-4face8109e0d52ef5894c41c69e4ec6b_hd.jpg" alt="img"></p>
+<p>双亲委派机制</p>
+<p>1-&gt;2-&gt;3-&gt;4</p>
+<p>由于java语言动态的特性，在程序运行后，所运行的类，就已经在JVM的内存中，我们就可以直接调用已经加载好的类去实现我们的方法操作。</p>
+<blockquote>
+<p>在很大一部分情况下，公司上线的产品都是以jar包或者war包部署到Tomcat下运行的，我们如果有源码，能审查链以后，就可以直接利用加载在JVM中的类进行操作。</p>
+</blockquote>
+<ol>
+<li>Java反射机制的核心是在程序运行时动态加载类并获取类的详细信息，从而操作类或对象的属性和方法。本质是JVM得到class对象之后，再通过class对象进行反编译，从而获取对象的各种信息。</li>
+<li>Java属于&#x3D;&#x3D;先编译再运行&#x3D;&#x3D;的语言，程序中对象的类型在编译期就确定下来了，而当程序在运行时可能需要动态加载某些类，这些类因为之前用不到，所以没有被加载到JVM。通过反射，可以在运行时动态地创建对象并调用其属性，不需要提前在编译期知道运行的对象是谁。</li>
+<li><strong>反射调用方法时，会忽略权限检查</strong>，可以无视权限修改对应的值—&gt;因此容易导致安全性问题，（对安全研究人员来说提供了不小的帮助，hhhh）</li>
+</ol>
+<h3 id="反射举例"><a href="#反射举例" class="headerlink" title="反射举例"></a>反射举例</h3><p>我们最常见的反射举例，是加载数据库驱动时的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Class.forName(<span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>);<span class="comment">//动态加载JDBC驱动</span></span><br><span class="line"><span class="type">Connection</span> <span class="variable">conn</span> <span class="operator">=</span> DriverManager.getConnection(url, user, password);</span><br></pre></td></tr></table></figure>
+
+<h4 id="反射常用的方法有"><a href="#反射常用的方法有" class="headerlink" title="反射常用的方法有"></a>反射常用的方法有</h4><p>Java.lang.Class;</p>
+<p>Java.lang.reflect.Constructor;</p>
+<p>Java.lang.reflect.Field;</p>
+<p>Java.lang.reflect.Method;</p>
+<p>Java.lang.reflect.Modifier;</p>
+<h4 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h4><h5 id="获得Class"><a href="#获得Class" class="headerlink" title="获得Class"></a>获得Class</h5><ul>
+<li>类名.class，如:com.student.Student.class。</li>
+<li>ClassLoader.getSystemClassLoader().loadClass(“com.student.Student”)</li>
+<li>Class.forName(“com.student.Student”)</li>
+</ul>
+<p>于是乎，我们通过反射可以这样获取<code>Runtime</code>类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">className</span>     <span class="operator">=</span> <span class="string">&quot;java.lang.Runtime&quot;</span>;</span><br><span class="line"><span class="type">Class</span>  <span class="variable">runtimeClass1</span> <span class="operator">=</span> Class.forName(className);</span><br><span class="line"><span class="type">Class</span>  <span class="variable">runtimeClass2</span> <span class="operator">=</span> java.lang.Runtime.class;</span><br><span class="line"><span class="type">Class</span>  <span class="variable">runtimeClass3</span> <span class="operator">=</span> ClassLoader.getSystemClassLoader().loadClass(className);</span><br></pre></td></tr></table></figure>
+
+<h5 id="获取构造器"><a href="#获取构造器" class="headerlink" title="获取构造器"></a>获取构造器</h5><p>这里，有两个方法</p>
+<ul>
+<li>getDeclaredConstructor()</li>
+<li>getConstructor()</li>
+</ul>
+<p>其中，getDeclaredConstructor()可以获得构造方法，也就是我们常用的<code>private</code>方法，其中Runtime的构造方法是<code>private</code>，我们无法直接调用，我们需要使用反射去修改方法的访问权限（使用<code>setAccessible</code>，修改为 true）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Constructor</span> <span class="variable">constructor</span> <span class="operator">=</span> runtimeClass1.getDeclaredConstructor();</span><br><span class="line">constructor.setAccessible(<span class="literal">true</span>);</span><br></pre></td></tr></table></figure>
+
+<h5 id="通过获取的构造器进行实例化对象"><a href="#通过获取的构造器进行实例化对象" class="headerlink" title="通过获取的构造器进行实例化对象"></a>通过获取的构造器进行实例化对象</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Object类是所有类的父类，有兴趣的同学可以在双亲委派机制中去搞明白</span></span><br><span class="line"><span class="type">Object</span> <span class="variable">runtimeInstance</span> <span class="operator">=</span> constructor.newInstance();</span><br><span class="line"><span class="comment">//这里的话就等价于</span></span><br><span class="line"><span class="type">Runtime</span> <span class="variable">rt</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Runtime</span>();</span><br></pre></td></tr></table></figure>
+
+<h5 id="获取方法"><a href="#获取方法" class="headerlink" title="获取方法"></a>获取方法</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Method</span> <span class="variable">runtimeMethod</span> <span class="operator">=</span> runtimeClass1.getMethod(<span class="string">&quot;exec&quot;</span>, String.class);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>当我们想获取当前类的所有成员方法时们可以使用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Method[] methods = class.getDeclaredMethods()</span><br></pre></td></tr></table></figure>
+
+<p>获取当前类指定的成员方法时，</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Method</span> <span class="variable">method</span> <span class="operator">=</span> class.getDeclaredMethod(<span class="string">&quot;方法名&quot;</span>);</span><br><span class="line"><span class="type">Method</span> <span class="variable">method</span> <span class="operator">=</span> class.getDeclaredMethod(<span class="string">&quot;方法名&quot;</span>, 参数类型如String.class，多个参数用<span class="string">&quot;,&quot;</span>号隔开);</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h5 id="执行方法"><a href="#执行方法" class="headerlink" title="执行方法"></a>执行方法</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Process</span> <span class="variable">process</span> <span class="operator">=</span> (Process) runtimeMethod.invoke(runtimeInstance, <span class="string">&quot;calc&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>这里简单解释一下 invoke方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">method.invoke(方法实例对象, 方法参数值，多个参数值用<span class="string">&quot;,&quot;</span>隔开);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<ol>
+<li>invoke就是调用类中的方法，最简单的用法是可以把方法参数化invoke(class, method)</li>
+</ol>
+<p> 这里则是使用了 class.invoke(method,”参数”)的一个方式</p>
+<ol start="2">
+<li>还可以把方法名存进数组v[],然后循环里invoke(test,v[i]),就顺序调用了全部方法</li>
+</ol>
+<p> （之后会介绍）</p>
+</blockquote>
+<h5 id="回显结果，不需要回显的话就忽略"><a href="#回显结果，不需要回显的话就忽略" class="headerlink" title="回显结果，不需要回显的话就忽略"></a>回显结果，不需要回显的话就忽略</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">InputStream</span> <span class="variable">inputStream</span> <span class="operator">=</span> process.getInputStream();</span><br><span class="line">      <span class="type">InputStreamReader</span> <span class="variable">inputStreamReader</span> <span class="operator">=</span>  <span class="keyword">new</span> <span class="title class_">InputStreamReader</span>(inputStream);</span><br><span class="line">      <span class="type">BufferedReader</span> <span class="variable">inputBufferedReader</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedReader</span>(inputStreamReader);</span><br><span class="line">      StringBuilder stringBuilder=<span class="keyword">new</span> <span class="title class_">StringBuilder</span>();</span><br><span class="line">      <span class="type">String</span> <span class="variable">line</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">      <span class="keyword">while</span> ((line = inputBufferedReader.readLine()) != <span class="literal">null</span>) &#123;</span><br><span class="line">          stringBuilder.append(line);</span><br><span class="line">          System.out.println(line);</span><br><span class="line">      &#125;</span><br><span class="line">      inputBufferedReader.close();</span><br><span class="line">      inputStreamReader.close();</span><br><span class="line">      inputStream.close();</span><br></pre></td></tr></table></figure>
+
+<h5 id="获取成员变量-Demo中没有用到"><a href="#获取成员变量-Demo中没有用到" class="headerlink" title="获取成员变量(Demo中没有用到)"></a>获取成员变量(Demo中没有用到)</h5><p>反射还可以对成员变量进行操作</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//获取类中的成员们变量</span></span><br><span class="line"><span class="type">Field</span> <span class="variable">fields</span> <span class="operator">=</span> class.getDeclaredFields();</span><br><span class="line"><span class="comment">//获取当前类指定的成员变量</span></span><br><span class="line"><span class="type">Field</span> <span class="variable">field</span>  <span class="operator">=</span> class.getDeclaredField(<span class="string">&quot;变量名&quot;</span>);</span><br><span class="line"><span class="comment">//获取成员变量的值</span></span><br><span class="line"><span class="type">Object</span> <span class="variable">obj</span> <span class="operator">=</span> field.get(类实例对象);</span><br><span class="line"><span class="comment">//修改成员变量的值</span></span><br><span class="line">field.set(类实例对象, 修改后的值);</span><br></pre></td></tr></table></figure>
+
+<h4 id="完整代码"><a href="#完整代码" class="headerlink" title="完整代码"></a>完整代码</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.BufferedReader;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStreamReader;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Constructor;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.InvocationTargetException;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Method;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RuntimeTest</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException, IOException &#123;</span><br><span class="line">        <span class="type">Class</span>  <span class="variable">runtimeClass1</span> <span class="operator">=</span> Class.forName(<span class="string">&quot;java.lang.Runtime&quot;</span>);<span class="comment">//相当于 import</span></span><br><span class="line">        <span class="type">Constructor</span> <span class="variable">constructor</span> <span class="operator">=</span>  runtimeClass1.getDeclaredConstructor();<span class="comment">//相当于编写无参构造类</span></span><br><span class="line">        constructor.setAccessible(<span class="literal">true</span>);<span class="comment">//取消private的限制</span></span><br><span class="line">        <span class="type">Object</span> <span class="variable">runtimeInstance</span> <span class="operator">=</span> constructor.newInstance();<span class="comment">//有了无参构造类以后，我们new了一个对象</span></span><br><span class="line">        <span class="type">Method</span> <span class="variable">method</span> <span class="operator">=</span> runtimeClass1.getMethod(<span class="string">&quot;exec&quot;</span>,String.class);<span class="comment">//编写类的方法</span></span><br><span class="line">        <span class="type">Process</span> <span class="variable">process</span> <span class="operator">=</span> (Process) method.invoke(runtimeInstance,<span class="string">&quot;calc&quot;</span>);<span class="comment">//调用了类的方法</span></span><br><span class="line">        <span class="comment">//接下来就是回显的结果</span></span><br><span class="line">        <span class="type">InputStream</span> <span class="variable">inputStream</span> <span class="operator">=</span> process.getInputStream();</span><br><span class="line">        <span class="type">InputStreamReader</span> <span class="variable">inputStreamReader</span> <span class="operator">=</span>  <span class="keyword">new</span> <span class="title class_">InputStreamReader</span>(inputStream);</span><br><span class="line">        <span class="type">BufferedReader</span> <span class="variable">inputBufferedReader</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedReader</span>(inputStreamReader);</span><br><span class="line">        StringBuilder stringBuilder=<span class="keyword">new</span> <span class="title class_">StringBuilder</span>();</span><br><span class="line">        <span class="type">String</span> <span class="variable">line</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">while</span> ((line = inputBufferedReader.readLine()) != <span class="literal">null</span>) &#123;</span><br><span class="line">            stringBuilder.append(line);</span><br><span class="line">            System.out.println(line);</span><br><span class="line">        &#125;</span><br><span class="line">        inputBufferedReader.close();</span><br><span class="line">        inputStreamReader.close();</span><br><span class="line">        inputStream.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="深入理解反射"><a href="#深入理解反射" class="headerlink" title="深入理解反射"></a>深入理解反射</h3><p><img src="https://cdn.jsdelivr.net/gh/h0ld1rs/image/image/20220115184644.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/h0ld1rs/image/image/20220116221535.png"></p>
+<h3 id="反射的作用和意义"><a href="#反射的作用和意义" class="headerlink" title="反射的作用和意义"></a>反射的作用和意义</h3><p>我胡诌的：</p>
+<p>对于安全人员来说，使用反射，可以更加高效的利用项目本身的属性类，而不借助其他外部类去实现一些漏洞的挖掘，这也是我们挖掘gadget的基本思路</p>
+<h2 id="ClassLoader类加载器"><a href="#ClassLoader类加载器" class="headerlink" title="ClassLoader类加载器"></a>ClassLoader类加载器</h2><p>前面提到过编译成class字节码后的文件，会使用类加载器加载字节码。也就是说在java中所有的类都会通过加载器进行加载才能运行。在JVM类加载器中最顶层的是<code>Bootstrap ClassLoader(引导类加载器)</code>、<code>Extension ClassLoader(扩展类加载器)</code>、<code>App ClassLoader(系统类加载器)</code>，<code>AppClassLoader</code>是默认的类加载器，如果类加载时我们不指定类加载器的情况下，默认会使用<code>AppClassLoader</code>加载类。<br><img src="https://cdn.jsdelivr.net/gh/h0ld1rs/image/image/20220311233314.png"></p>
+<p>这里提到这么多种加载器，他们分别指什么呢？</p>
+<ol>
+<li><p>引导类加载器(BootStrapClassLoader)</p>
+<p>这里我们看到&#x2F;jre&#x2F;lib&#x2F;rt.jar目录，这里面的类都是由BootstrapClassLoader来加载。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/h0ld1rs/image/image/20220313191113.png"></p>
+</li>
+<li><p>扩展类加载器(ExtensionsClassLoader)</p>
+<p>扩展类加载器(ExtensionsClassLoader)，由sun.misc.Launcher$ExtClassLoader类实现，用来在&#x2F;jre&#x2F;lib&#x2F;ext或者java.ext.dirs中指明的目录加载java的扩展库。Java虚拟机会提供一个扩展库目录，此加载器在目录里面查找并加载java类。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/h0ld1rs/image/image/20220313191413.png"></p>
+</li>
+<li><p>App类加载器&#x2F;系统类加载器（AppClassLoader）</p>
+<blockquote>
+<p> App类加载器&#x2F;系统类加载器（AppClassLoader），由sun.misc.Launcher$AppClassLoader实现，一般通过通过(java.class.path或者Classpath环境变量)来加载Java类，也就是我们常说的classpath路径。通常我们是使用这个加载类来加载Java应用类，可以使用ClassLoader.getSystemClassLoader()来获取它。</p>
+</blockquote>
+<p>我们可以编写如下代码来确定</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        System.out.println(Test.class.getClassLoader().toString());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/h0ld1rs/image/image/20220313191720.png"></p>
+</li>
+<li><p>自定义类加载器(UserDefineClassLoader)</p>
+<p>（这方面内容请看<a href="https://h0ld1rs.github.io/posts/42607.html%EF%BC%89">https://h0ld1rs.github.io/posts/42607.html）</a></p>
+</li>
+</ol>
+<h3 id="ClassLoader类-核心方法："><a href="#ClassLoader类-核心方法：" class="headerlink" title="ClassLoader类 核心方法："></a>ClassLoader类 核心方法：</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span>loadClass(String className)，根据名字加载一个类。</span><br><span class="line"><span class="number">2.</span>defineClass(String name, <span class="type">byte</span>[] b, <span class="type">int</span> off, <span class="type">int</span> len)，将一个字节流定义为一个类。</span><br><span class="line"><span class="number">3.</span>findClass(String name)，查找一个类。</span><br><span class="line"><span class="number">4.</span>findLoadedClass(String name)，在已加载的类中，查找一个类。</span><br><span class="line"><span class="number">5.</span>resolveClass(链接指定的Java类)</span><br></pre></td></tr></table></figure>
+
+<h2 id="序列化和反序列化"><a href="#序列化和反序列化" class="headerlink" title="序列化和反序列化"></a>序列化和反序列化</h2><h3 id="为什么需要使用序列化"><a href="#为什么需要使用序列化" class="headerlink" title="为什么需要使用序列化"></a>为什么需要使用序列化</h3><p>和php使用序列化的情况一样，</p>
+<p>但很多情况下，我们需要保存某⼀刻某个对象的信息，来进⾏⼀些操作。⽐如利⽤反序列化将程序运 ⾏的对象状态以⼆进制形式储存与⽂件系统中，然后可以在另⼀个程序中对序列化后的对象状态数据 进⾏反序列化恢复对象。可以有效地实现多平台之间的通信、对象持久化存储。</p>
+<h3 id="应用需求"><a href="#应用需求" class="headerlink" title="应用需求"></a>应用需求</h3><p>想要实现序列化需要满足几个条件</p>
+<ol>
+<li><p>该类必须实现<code>java.io.Serlalizable</code>接口</p>
+</li>
+<li><p>该类的所有属性必须是可序列化的，如果⼀个属性是不可序列化的，则属性必须标明是短暂的。</p>
+<p>比如：static，transient 修饰的变量不可被序列化</p>
+</li>
+</ol>
+<p>用于的场景业务</p>
+<ul>
+<li>把对象的字节序列永久地保存到硬盘上，通常存放在⼀个⽂件中；</li>
+<li>在⽹络上传送对象的字节序列</li>
+</ul>
+<blockquote>
+<p>服务器启动后，就不会再关闭了，但是如果逼不得已需要重启，⽽⽤⼾会话还在进⾏相 应的操作，这时就需要使⽤序列化将session信息保存起来放在硬盘，服务器重启后，⼜重新加载。 这样就保证了⽤⼾信息不会丢失，实现永久化保存。</p>
+<p>最常⻅的是Web服务器中的Session对象，当有 10万⽤⼾并发访问，就有可能出现10万个Session 对象，内存可能吃不消，于是Web容器就会把⼀些seesion先序列化到硬盘中，等要⽤了，再把保 存在硬盘中的对象还原到内存中。</p>
+</blockquote>
+<h3 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h3><p>序列化：</p>
+<ul>
+<li><p>ObjectOutputStream类 -&gt; writeObject()</p>
+<blockquote>
+<p>该⽅法对参数指定的obj⽂件进⾏序列化把字节序列写到⼀个⽬标输出流中，按照java标准是 给⽂件⼀个 ser 的扩展名</p>
+</blockquote>
+</li>
+</ul>
+<p>反序列化</p>
+<ul>
+<li><p>ObjectInputStream类-&gt; readObject()</p>
+<blockquote>
+<p>该⽅法是从⼀个输⼊流中读取字节序列，再把他们反序列化成对象，将其返回</p>
+</blockquote>
+</li>
+</ul>
+<p>Java反序列化时会执⾏readObject()⽅法，所以如果readObject()⽅法被恶意构造 的话，就有可能导致命令执⾏。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.Serializable;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.Serializable;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> <span class="keyword">implements</span> <span class="title class_">Serializable</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(String name)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">readObject</span><span class="params">(ObjectInputStream in )</span> <span class="keyword">throws</span> IOException, ClassNotFoundException &#123;</span><br><span class="line">        in.defaultReadObject();</span><br><span class="line">        Runtime.getRuntime().exec(<span class="string">&quot;calc.exe&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.Serializable;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String args[])</span> <span class="keyword">throws</span> Exception&#123;</span><br><span class="line">        <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>();</span><br><span class="line">        <span class="comment">//这里设不设置属性无所谓，主要看当时的情况</span></span><br><span class="line">        user.setName(<span class="string">&quot;Wuming&quot;</span>);</span><br><span class="line">        <span class="comment">//序列化</span></span><br><span class="line">        <span class="type">OutputStream</span> <span class="variable">outputStream</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(<span class="keyword">new</span> <span class="title class_">File</span>(<span class="string">&quot;C:\\Users\\12451\\Desktop\\Java-Learn\\src\\main\\java\\com\\Serializable\\test.ser&quot;</span>));</span><br><span class="line">        <span class="type">ObjectOutputStream</span> <span class="variable">objectOutputStream</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectOutputStream</span>(outputStream);</span><br><span class="line">        objectOutputStream.writeObject(user);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//反序列化</span></span><br><span class="line">        <span class="type">InputStream</span> <span class="variable">inputStream</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileInputStream</span>(<span class="keyword">new</span> <span class="title class_">File</span>(<span class="string">&quot;C:\\Users\\12451\\Desktop\\Java-Learn\\src\\main\\java\\com\\Serializable\\test.ser&quot;</span>));</span><br><span class="line">        <span class="type">ObjectInputStream</span> <span class="variable">objectInputStream</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectInputStream</span>(inputStream);</span><br><span class="line">        <span class="type">User</span> <span class="variable">test</span> <span class="operator">=</span> (User) objectInputStream.readObject();</span><br><span class="line"></span><br><span class="line"><span class="comment">//    //把object对象储存为字节流的形式</span></span><br><span class="line"><span class="comment">//        FileOutputStream fos = new FileOutputStream(&quot;object&quot;);</span></span><br><span class="line"><span class="comment">//        ObjectOutputStream os = new ObjectOutputStream(fos);</span></span><br><span class="line"><span class="comment">//    //将对象写⼊object⽂件</span></span><br><span class="line"><span class="comment">//        os.writeObject(user);</span></span><br><span class="line"><span class="comment">//        os.close();</span></span><br><span class="line"><span class="comment">//    //从⽂件中反序列化obj对象</span></span><br><span class="line"><span class="comment">//        FileInputStream fis = new FileInputStream(&quot;object&quot;);</span></span><br><span class="line"><span class="comment">//        ObjectInputStream ois = new ObjectInputStream(fis);</span></span><br><span class="line"><span class="comment">//    //恢复对象</span></span><br><span class="line"><span class="comment">//        User user1 = (User) ois.readObject();</span></span><br><span class="line"><span class="comment">//        System.out.println(user1.getName());</span></span><br><span class="line"><span class="comment">//        ois.close();</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="关于serialVersionUID-序列号"><a href="#关于serialVersionUID-序列号" class="headerlink" title="关于serialVersionUID(序列号)"></a>关于serialVersionUID(序列号)</h3><h4 id="当我们没有自定义序列化ID"><a href="#当我们没有自定义序列化ID" class="headerlink" title="当我们没有自定义序列化ID"></a>当我们没有自定义序列化ID</h4><p>如果我们没有自定义序列化id，当我们修改User 类的时候，编译器又为我们User 类生成了一个UID，而序列化和反序列化就是通过对比其SerialversionUID来进行的，一旦SerialversionUID不匹配，反序列化就无法成功。在实际的生产环境中，如果我们有需求要在序列化后添加一个字段或者方法,应该怎么办？那就是自己去指定serialVersionUID。</p>
+<h4 id="设置序列化ID"><a href="#设置序列化ID" class="headerlink" title="设置序列化ID"></a>设置序列化ID</h4><p>序列化运行时将一个版本号与每个称为SerialVersionUID的可序列化类相关联，在反序列化过程中使用该序列号验证序列化对象的发送方和接收方是否为该对象加载了与序列化兼容的类。如果接收方为对象加载的类的UID与相应发送方类的UID不同，则反序列化将导致<strong>InvalidClassException</strong>. 可序列化类可以通过声明字段名来显式声明自己的UID。</p>
+<p>它必须是static、final和long类型。例如</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">public</span>/<span class="keyword">private</span>/<span class="keyword">protected</span>/<span class="keyword">default</span>) <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">long</span> serialVersionUID=<span class="number">42L</span>；</span><br></pre></td></tr></table></figure>
+
+<p>如果可序列化类没有显式声明serialVersionUID，则序列化运行时将根据类的各个方面为该类计算默认值，如Java对象序列化规范中所述。但是，强烈建议所有可序列化类显式声明serialVersionUID值，因为它的计算对类细节高度敏感，这些细节可能因编译器实现而异，因此类中的任何更改或使用不同的id都可能影响序列化的数据。</p>
+<p>还建议对UID使用private修饰符，因为它作为继承成员没有用处。</p>
+<p>IDEA设置自动生成UID的方式请参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/gnail_oug/article/details/80263383">https://blog.csdn.net/gnail_oug/article/details/80263383</a></p>
+<h2 id="命令执行"><a href="#命令执行" class="headerlink" title="命令执行"></a>命令执行</h2><p>首先介绍最基本的 java中的命令执行</p>
+<p>我们以后，最常用的poc，就是下面的这条</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Calc</span> &#123;</span><br><span class="line">    <span class="comment">//当前执行命令无回显</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        Runtime.getRuntime().exec(<span class="string">&quot;calc.exe&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这里，在额外普及一下，如果需要回显怎么办的问题，主要是用IO流将命令执行后的字节加载出来，然后最基本的按行读取，就可以了。</p>
+<p>在进行网站开发入JSP的时候，我们使用的JSP一句话木马也是根据这个原理进行编写的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.BufferedReader;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStreamReader;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Ping</span> &#123;</span><br><span class="line">    <span class="comment">//我们需要执行有回显得命令</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        <span class="type">Process</span> <span class="variable">process</span> <span class="operator">=</span> Runtime.getRuntime().exec(<span class="string">&quot;ping baidu.com&quot;</span>);</span><br><span class="line">        <span class="type">InputStream</span> <span class="variable">inputStream</span> <span class="operator">=</span> process.getInputStream();</span><br><span class="line">        <span class="type">InputStreamReader</span> <span class="variable">inputStreamReader</span> <span class="operator">=</span>  <span class="keyword">new</span> <span class="title class_">InputStreamReader</span>(inputStream);</span><br><span class="line">        <span class="type">BufferedReader</span> <span class="variable">inputBufferedReader</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedReader</span>(inputStreamReader);</span><br><span class="line">        StringBuilder stringBuilder=<span class="keyword">new</span> <span class="title class_">StringBuilder</span>();</span><br><span class="line">        <span class="type">String</span> <span class="variable">line</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">while</span> ((line = inputBufferedReader.readLine()) != <span class="literal">null</span>) &#123;</span><br><span class="line">            stringBuilder.append(line);</span><br><span class="line">            System.out.println(line);</span><br><span class="line">        &#125;</span><br><span class="line">        inputBufferedReader.close();</span><br><span class="line">        inputBufferedReader=<span class="literal">null</span>;</span><br><span class="line">        inputStreamReader.close();</span><br><span class="line">        inputStreamReader=<span class="literal">null</span>;</span><br><span class="line">        inputStream.close();</span><br><span class="line">        inputStream=<span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="Runtime的其他用法"><a href="#Runtime的其他用法" class="headerlink" title="Runtime的其他用法"></a>Runtime的其他用法</h3><p>我们在进行命令执行的时候，是需要区分操作系统的，不同的操作系统所执行的命令方式绝对是不一样的，</p>
+<h4 id="Windows下"><a href="#Windows下" class="headerlink" title="Windows下"></a>Windows下</h4><p>windows 我们可以调用 cmd或者powershell去执行命令，但是powershell一般会限制执行策略，所以使用cmd一般是比较保险的</p>
+<p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7.2">https://docs.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7.2</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">String [] cmd=&#123;<span class="string">&quot;cmd&quot;</span>,<span class="string">&quot;/C&quot;</span>,<span class="string">&quot;calc.exe&quot;</span>&#125;; </span><br><span class="line"><span class="type">Process</span> <span class="variable">proc</span> <span class="operator">=</span>Runtime.getRuntime().exec(cmd);</span><br></pre></td></tr></table></figure>
+
+<h4 id="linux下"><a href="#linux下" class="headerlink" title="linux下"></a>linux下</h4><p>对于linux的话，我们一般可以使用<code>bash</code>进行命令的执行，通常情况下是会有的，但是有的情况，可能没有bash，我们就可以使用<code>sh</code>来进行替代，</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">String [] cmd=&#123;<span class="string">&quot;/bin/sh&quot;</span>,<span class="string">&quot;-c&quot;</span>,<span class="string">&quot;ls&quot;</span>&#125;; </span><br><span class="line"><span class="type">Process</span> <span class="variable">proc</span> <span class="operator">=</span>Runtime.getRuntime().exec(cmd);</span><br></pre></td></tr></table></figure>
+
+<p>于是乎，在后面我们写exp或者一些工具的时候，就需要根据主机的操作系统进行甄别</p>
+<p>最简单的办法就是使用<code>getProperty</code>函数进行<code>os</code>的名称</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">System.getProperty(<span class="string">&quot;os.name&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>初步demo</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.BufferedReader;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStreamReader;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">property</span> <span class="operator">=</span> System.getProperty(<span class="string">&quot;os.name&quot;</span>);</span><br><span class="line">        String [] cmd1=&#123;<span class="string">&quot;cmd&quot;</span>,<span class="string">&quot;/C&quot;</span>,<span class="string">&quot;start calc.exe&quot;</span>&#125;;</span><br><span class="line">        String [] cmd2=&#123;<span class="string">&quot;/bin/sh&quot;</span>,<span class="string">&quot;-c&quot;</span>,<span class="string">&quot;ls&quot;</span>&#125;;</span><br><span class="line">        String [] cmd = <span class="literal">null</span>;</span><br><span class="line">        System.out.println(property);</span><br><span class="line">        <span class="keyword">if</span> (property.contains(<span class="string">&quot;Windows&quot;</span>))&#123;</span><br><span class="line">             cmd= cmd1;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">             cmd= cmd1;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="type">Process</span> <span class="variable">process</span> <span class="operator">=</span>Runtime.getRuntime().exec(cmd);</span><br><span class="line">        <span class="comment">//取得命令结果的输出流</span></span><br><span class="line">        <span class="type">InputStream</span> <span class="variable">inputStream</span> <span class="operator">=</span> process.getInputStream();</span><br><span class="line">        <span class="comment">//用输出读取去读</span></span><br><span class="line">        <span class="type">InputStreamReader</span> <span class="variable">inputStreamReader</span> <span class="operator">=</span>  <span class="keyword">new</span> <span class="title class_">InputStreamReader</span>(inputStream);</span><br><span class="line">        <span class="comment">//创建缓冲器</span></span><br><span class="line">        <span class="type">BufferedReader</span> <span class="variable">inputBufferedReader</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedReader</span>(inputStreamReader);</span><br><span class="line">        StringBuilder stringBuilder=<span class="keyword">new</span> <span class="title class_">StringBuilder</span>();</span><br><span class="line">        <span class="type">String</span> <span class="variable">line</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">while</span> ((line = inputBufferedReader.readLine()) != <span class="literal">null</span>) &#123;</span><br><span class="line">            stringBuilder.append(line);</span><br><span class="line">            System.out.println(line);</span><br><span class="line">        &#125;</span><br><span class="line">        inputBufferedReader.close();</span><br><span class="line">        inputBufferedReader=<span class="literal">null</span>;</span><br><span class="line">        inputStreamReader.close();</span><br><span class="line">        inputStreamReader=<span class="literal">null</span>;</span><br><span class="line">        inputStream.close();</span><br><span class="line">        inputStream=<span class="literal">null</span>;</span><br><span class="line"><span class="comment">//        return stringBuilder;</span></span><br><span class="line"><span class="comment">//        这里如果要返回的值的话，返回的应该是stringBuilder</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/a745233700/article/details/82893076">https://blog.csdn.net/a745233700/article/details/82893076</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/qingchen521/p/8575761.html">https://www.cnblogs.com/qingchen521/p/8575761.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/9002#toc-3">https://xz.aliyun.com/t/9002#toc-3</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">h0ld1rs</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://h0ld1rs.github.io/posts/39073.html">https://h0ld1rs.github.io/posts/39073.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://h0ld1rs.github.io" target="_blank">h0ld1rs的博客</a>！</span></div></div><div class="tag_share"><div class="post_share"><div class="social-share" data-image="/img/image/10.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-full"><a href="/posts/22734.html"><img class="prev-cover" src="/img/image/11.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">java安全入门(二)--CC链</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/20008.html" title="JDBC反序列化漏洞"><img class="cover" src="/img/image/12.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-25</div><div class="title">JDBC反序列化漏洞</div></div></a></div><div><a href="/posts/22734.html" title="java安全入门(二)--CC链"><img class="cover" src="/img/image/11.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-15</div><div class="title">java安全入门(二)--CC链</div></div></a></div><div><a href="/posts/42607.html" title="java字节码加载的相关笔记"><img class="cover" src="/img/image/9.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-03-11</div><div class="title">java字节码加载的相关笔记</div></div></a></div><div><a href="/posts/3525.html" title="JNDI入门"><img class="cover" src="/img/image/13.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-28</div><div class="title">JNDI入门</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/1.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">h0ld1rs</div><div class="author-info__description">希望能认识更多师傅，学到更多东西</div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">13</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/h0ld1rs"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#java%E5%AE%89%E5%85%A8%E5%85%A5%E9%97%A8-%E4%B8%80"><span class="toc-number">1.</span> <span class="toc-text">java安全入门(一)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E5%9E%8B%E8%AF%AD%E8%A8%80%E5%92%8C%E8%A7%A3%E9%87%8A%E6%80%A7%E8%AF%AD%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">编译型语言和解释性语言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8D%E5%B0%84"><span class="toc-number">1.2.</span> <span class="toc-text">反射</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%88%91%E4%BB%AC%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BF%85%E9%A1%BB%E4%BD%BF%E7%94%A8%E5%8F%8D%E5%B0%84"><span class="toc-number">1.2.1.</span> <span class="toc-text">我们为什么必须使用反射</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%B0%84%E8%8E%B7%E5%8F%96%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.2.2.</span> <span class="toc-text">反射获取对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%B0%84%E4%B8%BE%E4%BE%8B"><span class="toc-number">1.2.3.</span> <span class="toc-text">反射举例</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%8D%E5%B0%84%E5%B8%B8%E7%94%A8%E7%9A%84%E6%96%B9%E6%B3%95%E6%9C%89"><span class="toc-number">1.2.3.1.</span> <span class="toc-text">反射常用的方法有</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="toc-number">1.2.3.2.</span> <span class="toc-text">基本使用</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%8E%B7%E5%BE%97Class"><span class="toc-number">1.2.3.2.1.</span> <span class="toc-text">获得Class</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E6%9E%84%E9%80%A0%E5%99%A8"><span class="toc-number">1.2.3.2.2.</span> <span class="toc-text">获取构造器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%80%9A%E8%BF%87%E8%8E%B7%E5%8F%96%E7%9A%84%E6%9E%84%E9%80%A0%E5%99%A8%E8%BF%9B%E8%A1%8C%E5%AE%9E%E4%BE%8B%E5%8C%96%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.2.3.2.3.</span> <span class="toc-text">通过获取的构造器进行实例化对象</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E6%96%B9%E6%B3%95"><span class="toc-number">1.2.3.2.4.</span> <span class="toc-text">获取方法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%89%A7%E8%A1%8C%E6%96%B9%E6%B3%95"><span class="toc-number">1.2.3.2.5.</span> <span class="toc-text">执行方法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9B%9E%E6%98%BE%E7%BB%93%E6%9E%9C%EF%BC%8C%E4%B8%8D%E9%9C%80%E8%A6%81%E5%9B%9E%E6%98%BE%E7%9A%84%E8%AF%9D%E5%B0%B1%E5%BF%BD%E7%95%A5"><span class="toc-number">1.2.3.2.6.</span> <span class="toc-text">回显结果，不需要回显的话就忽略</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F-Demo%E4%B8%AD%E6%B2%A1%E6%9C%89%E7%94%A8%E5%88%B0"><span class="toc-number">1.2.3.2.7.</span> <span class="toc-text">获取成员变量(Demo中没有用到)</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%8C%E6%95%B4%E4%BB%A3%E7%A0%81"><span class="toc-number">1.2.3.3.</span> <span class="toc-text">完整代码</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%8F%8D%E5%B0%84"><span class="toc-number">1.2.4.</span> <span class="toc-text">深入理解反射</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%B0%84%E7%9A%84%E4%BD%9C%E7%94%A8%E5%92%8C%E6%84%8F%E4%B9%89"><span class="toc-number">1.2.5.</span> <span class="toc-text">反射的作用和意义</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ClassLoader%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8"><span class="toc-number">1.3.</span> <span class="toc-text">ClassLoader类加载器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ClassLoader%E7%B1%BB-%E6%A0%B8%E5%BF%83%E6%96%B9%E6%B3%95%EF%BC%9A"><span class="toc-number">1.3.1.</span> <span class="toc-text">ClassLoader类 核心方法：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8C%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96"><span class="toc-number">1.4.</span> <span class="toc-text">序列化和反序列化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E4%BD%BF%E7%94%A8%E5%BA%8F%E5%88%97%E5%8C%96"><span class="toc-number">1.4.1.</span> <span class="toc-text">为什么需要使用序列化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E9%9C%80%E6%B1%82"><span class="toc-number">1.4.2.</span> <span class="toc-text">应用需求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BE%E4%BE%8B"><span class="toc-number">1.4.3.</span> <span class="toc-text">举例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E4%BA%8EserialVersionUID-%E5%BA%8F%E5%88%97%E5%8F%B7"><span class="toc-number">1.4.4.</span> <span class="toc-text">关于serialVersionUID(序列号)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BD%93%E6%88%91%E4%BB%AC%E6%B2%A1%E6%9C%89%E8%87%AA%E5%AE%9A%E4%B9%89%E5%BA%8F%E5%88%97%E5%8C%96ID"><span class="toc-number">1.4.4.1.</span> <span class="toc-text">当我们没有自定义序列化ID</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E5%BA%8F%E5%88%97%E5%8C%96ID"><span class="toc-number">1.4.4.2.</span> <span class="toc-text">设置序列化ID</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C"><span class="toc-number">1.5.</span> <span class="toc-text">命令执行</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Runtime%E7%9A%84%E5%85%B6%E4%BB%96%E7%94%A8%E6%B3%95"><span class="toc-number">1.5.1.</span> <span class="toc-text">Runtime的其他用法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Windows%E4%B8%8B"><span class="toc-number">1.5.1.1.</span> <span class="toc-text">Windows下</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#linux%E4%B8%8B"><span class="toc-number">1.5.1.2.</span> <span class="toc-text">linux下</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%AB%A0"><span class="toc-number">1.6.</span> <span class="toc-text">参考文章</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/42607.html" title="java字节码加载的相关笔记"><img src="/img/image/9.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="java字节码加载的相关笔记"/></a><div class="content"><a class="title" href="/posts/42607.html" title="java字节码加载的相关笔记">java字节码加载的相关笔记</a><time datetime="2022-03-11T12:34:06.000Z" title="发表于 2022-03-11 20:34:06">2022-03-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/166.html" title="Go渗透测试笔记(七)"><img src="/img/image/8.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go渗透测试笔记(七)"/></a><div class="content"><a class="title" href="/posts/166.html" title="Go渗透测试笔记(七)">Go渗透测试笔记(七)</a><time datetime="2022-03-05T12:31:26.000Z" title="发表于 2022-03-05 20:31:26">2022-03-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/36907.html" title="Go渗透测试笔记(六)"><img src="/img/image/7.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go渗透测试笔记(六)"/></a><div class="content"><a class="title" href="/posts/36907.html" title="Go渗透测试笔记(六)">Go渗透测试笔记(六)</a><time datetime="2022-03-05T03:16:23.000Z" title="发表于 2022-03-05 11:16:23">2022-03-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/12296.html" title="Go渗透测试笔记(五)"><img src="/img/image/6.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go渗透测试笔记(五)"/></a><div class="content"><a class="title" href="/posts/12296.html" title="Go渗透测试笔记(五)">Go渗透测试笔记(五)</a><time datetime="2022-03-04T10:17:05.000Z" title="发表于 2022-03-04 18:17:05">2022-03-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/13916.html" title="Go渗透测试笔记(四)"><img src="/img/image/5.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go渗透测试笔记(四)"/></a><div class="content"><a class="title" href="/posts/13916.html" title="Go渗透测试笔记(四)">Go渗透测试笔记(四)</a><time datetime="2022-03-02T03:46:28.000Z" title="发表于 2022-03-02 11:46:28">2022-03-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/img/image/10.png')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By h0ld1rs</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"><script>(()=>{
+  const init = () => {
+    twikoo.init(Object.assign({
+      el: '#twikoo-wrap',
+      envId: 'commnet-1gmkug2k1ca99452',
+      region: '',
+      onCommentLoaded: function () {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.vemoji)'))
+      }
+    }, null))
+  }
+
+  const getCount = () => {
+    twikoo.getCommentsCount({
+      envId: 'commnet-1gmkug2k1ca99452',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(function (res) {
+      document.getElementById('twikoo-count').innerText = res[0].count
+    }).catch(function (err) {
+      console.error(err);
+    });
+  }
+
+  const runFn = () => {
+    init()
+    GLOBAL_CONFIG_SITE.isPost && getCount()
+  }
+
+  const loadTwikoo = () => {
+    if (typeof twikoo === 'object') {
+      setTimeout(runFn,0)
+      return
+    } 
+    getScript('https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js').then(runFn)
+  }
+
+  if ('Twikoo' === 'Twikoo' || !false) {
+    if (false) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = () => {
+      loadTwikoo()
+    }
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
