@@ -1,0 +1,614 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>codeql入门 | h0ld1rs的博客</title><meta name="keywords" content="codeql"><meta name="author" content="h0ld1rs"><meta name="copyright" content="h0ld1rs"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="对codeql的一些学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="codeql入门">
+<meta property="og:url" content="https://h0ld1rs.github.io/posts/7090.html">
+<meta property="og:site_name" content="h0ld1rs的博客">
+<meta property="og:description" content="对codeql的一些学习">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://h0ld1rs.github.io/img/image/14.png">
+<meta property="article:published_time" content="2022-03-14T03:11:58.000Z">
+<meta property="article:modified_time" content="2022-03-15T10:27:06.305Z">
+<meta property="article:author" content="h0ld1rs">
+<meta property="article:tag" content="codeql">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://h0ld1rs.github.io/img/image/14.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://h0ld1rs.github.io/posts/7090"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'codeql入门',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-03-15 18:27:06'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="h0ld1rs的博客" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/1.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">14</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">4</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 目录</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/image/14.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">h0ld1rs的博客</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 目录</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">codeql入门</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-03-14T03:11:58.000Z" title="发表于 2022-03-14 11:11:58">2022-03-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-15T10:27:06.305Z" title="更新于 2022-03-15 18:27:06">2022-03-15</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/codeql/">codeql</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="codeql入门"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/posts/7090.html#post-comment"><span id="twikoo-count"></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="codeql入门"><a href="#codeql入门" class="headerlink" title="codeql入门"></a>codeql入门</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最初接触codeql，是暑假公司师傅们提到了一下，当时在公司宿舍聊天，聊到各位师傅当时的面试题，，有一个师傅被问了AST语法树分析，，，</p>
+<p>然后一脸懵逼的我听着师傅的讲解，谈到了2021 强网杯 那道几十万行的pop链，瞬间知道他是干啥的，，，</p>
+<p>主要用于<code>污点追踪分析</code></p>
+<p><img src="https://pic4.zhimg.com/80/v2-96aeb9524104f7c9abdcd4718f5759bb_720w.jpg" alt="img"></p>
+<h2 id="Codeql基本概念"><a href="#Codeql基本概念" class="headerlink" title="Codeql基本概念"></a>Codeql基本概念</h2><h3 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h3><p>CodeQL是一个代码分析平台，在它的帮助下，安全研究人员可以利用已知的安全漏洞来挖掘类似的漏洞，可以实现变种分析的自动化。这里所谓的变种分析，就是以已知的安全漏洞作为参照物，在我们的目标代码中寻找类似的安全问题的过程。</p>
+<h3 id="漏洞挖掘范式"><a href="#漏洞挖掘范式" class="headerlink" title="漏洞挖掘范式"></a>漏洞挖掘范式</h3><p>我们知道，挖掘漏洞的时候，对于大佬来说，其实是可以硬审的，但是，对安全人员要求比较高，换句话说，对新手不太友好，</p>
+<p>那么，我们就可以照猫画虎去模仿的写一个类似的，去分析上面题到的变种类型。</p>
+<h2 id="QL"><a href="#QL" class="headerlink" title="QL"></a>QL</h2><p>QL是一种通用的、面向对象的语言，可以用来查询任何类型的数据。在CodeQL平台上面，为了帮助安全研究人员完成各种代码分析工作，提供了许多现成的查询和代码库——这些都是使用QL语言编写的，</p>
+<p>并且，它们都是开源的，源码可以从这里（<a target="_blank" rel="noopener" href="https://github.com/semmle/ql%EF%BC%89%E4%B8%8B%E8%BD%BD%E3%80%82">https://github.com/semmle/ql）下载。</a></p>
+<p>我们可以使用<code>mysql</code>去对比<code>codeql</code></p>
+<ul>
+<li>MySQL是一个数据库管理系统，可以用来存储、管理和分析数据；而CodeQL则可以看作是一个代码库管理系统，用于存储、管理和分析代码。</li>
+<li>为了分析数据，我们需要SQL语言来查询数据库；而为了分析代码，这里则需要利用QL语言来查询代码库。</li>
+</ul>
+<p>&#x3D;&#x3D;CodeQL数据库中存放的是使用CodeQL创建和分析的关系数据。 我们可以将其看作是QL的快照，但是针对CodeQL工具进行了相应的优化处理。&#x3D;&#x3D;</p>
+<h2 id="codeql的安装"><a href="#codeql的安装" class="headerlink" title="codeql的安装"></a>codeql的安装</h2><p>CodeQL主要分为引擎和库两部分，都可以在github上下载，核心的<code>解析引擎部分</code>是不开源的,用于解析数据库执行等操作，库是开源的，针对语言提供了很多函数和类型以方便我们写自己的规则。</p>
+<ol>
+<li><p>由于<code>CodeQL</code>的处理对象并不是源码本身，而是中间生成的AST结构数据库，所以我们先需要把我们的项目源码转换成<code>CodeQL</code>能够识别的<code>CodeDatabase</code>。这里先下载不开源的解析引擎</p>
+<p>所以我们需要先下载codeql的客户端</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/github/codeql-cli-binaries/releases</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>需要下载一下QL库，但这里还有一种更为简单的方法，可以使用<code>vscode-codeql-starter</code>项目进行启动</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/github/vscode-codeql-starter</span><br></pre></td></tr></table></figure>
+
+<p>由于其需要加载<code>ql库</code>，所以我们需要使用递归的方式下载</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> --recursive https://github.com/github/vscode-codeql-starter</span><br></pre></td></tr></table></figure>
+
+<p>主要是加载<code>submoudle</code></p>
+<blockquote>
+<p>简单来说就是一个模块引入了另一个子模块，所以才需要循环下载</p>
+</blockquote>
+</li>
+</ol>
+<p>这里遇到一些问题，就是版本的问题：ql的规则库和cli版本不对应，导致导入之后<code>ql</code>报错，和下图类似：</p>
+<p><img src="https://user-images.githubusercontent.com/1850771/135095922-46fd4798-9dde-4191-80dc-1b73203e8fa8.png" alt="图片"></p>
+<p>参考 issue :<a target="_blank" rel="noopener" href="https://github.com/github/codeql/issues/6768">https://github.com/github/codeql/issues/6768</a></p>
+<p>更换了 <code>codeql-cli</code>版本，我是更换到了<code>2.8.0</code>，此时最新版本是<code>2.8.3</code>，使用最新版本会报错。具体内容参考<code>issue</code></p>
+<p>其实官方还提供了一个CodeQL的在线版本：<a target="_blank" rel="noopener" href="https://lgtm.com/search">https://lgtm.com/search</a>  ， 可以使用</p>
+<h2 id="一个练习codeql语法的github项目"><a href="#一个练习codeql语法的github项目" class="headerlink" title="一个练习codeql语法的github项目"></a>一个练习codeql语法的github项目</h2><p><a target="_blank" rel="noopener" href="https://lab.github.com/githubtraining/codeql-u-boot-challenge-(cc++)">https://lab.github.com/githubtraining/codeql-u-boot-challenge-(cc++)</a></p>
+<h2 id="codeql数据库操作"><a href="#codeql数据库操作" class="headerlink" title="codeql数据库操作"></a>codeql数据库操作</h2><p>需要先创建数据库</p>
+<p><code>codeql database create &lt;database&gt; --language=&lt;language-identifier&gt; -source-root=&lt;path&gt; --command=&quot;mvn clean install --file pom.xml&quot;</code></p>
+<blockquote>
+<p>注意：如果省略<code>--command</code>参数，则 codeQL 会自动检测并使用自己的工具来构建。但还是强烈推荐使用自己自定义的参数，尤其是大项目时。</p>
+</blockquote>
+<p>更新数据库</p>
+<p><code>codeql database upgrade &lt;path&gt;</code></p>
+<p>对于建好的数据库，他的目录目录应该是如下的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- log/                # 输出的日志信息</span><br><span class="line">- db-java/            # 编译的数据库</span><br><span class="line">- src.zip             # 编译所对应的目标源码</span><br><span class="line">- codeql-database.yml # 数据库相关配置</span><br></pre></td></tr></table></figure>
+
+<p>注意：</p>
+<ol>
+<li>对于非编译性的语言来说，直接扫描,像php，python等脚本语言可以不用编译</li>
+<li>对于java这种语言来说，需要先经过编译。对于go来说，可编译也可不编译</li>
+</ol>
+<p>可以使用<code>codeql resolve languages</code>来看<code>codeql</code>支持哪些语言的版本</p>
+<p><img src="https://cdn.jsdelivr.net/gh/h0ld1rs/image/image/20220314114754.png"></p>
+<h2 id="第一个codeql代码"><a href="#第一个codeql代码" class="headerlink" title="第一个codeql代码"></a>第一个codeql代码</h2><p>这里在<code>Vscode</code>上安装了对应的扩展，直接搜索<code>codeql</code>即可</p>
+<p>测试代码样例：<a target="_blank" rel="noopener" href="https://github.com/l4yn3/micro_service_seclab/">https://github.com/l4yn3/micro_service_seclab/</a></p>
+<blockquote>
+<p>其他项目：在 Github Learning Lab 中，有一个用于学习 CodeQL 的入门课程 - CodeQL U-Boot Challenge (C&#x2F;C++)]</p>
+<p><a target="_blank" rel="noopener" href="https://lab.github.com/GitHubtraining/codeql-u-boot-challenge-%28cc++%29">https://lab.github.com/GitHubtraining/codeql-u-boot-challenge-%28cc++%29</a></p>
+</blockquote>
+<p>上面我们提到，我们需要使用codeql引擎，将需要分析的项目，转换成，可以被codeql识别的<code>database</code>，这个过程中，codeql引擎把我们的<code>java代码</code>转换成了可识别的<code>AST数据库</code>。</p>
+<p>AST分析出来是这样子的(需要对单独的类进行分析)</p>
+<p><img src="https://cdn.jsdelivr.net/gh/h0ld1rs/image/image/20211206221432.png"></p>
+<p>先导入qlpack.yml文件</p>
+<p>这一步其实可以直接再<code>starter</code>里面写，但是也可以将<code>starter和 新的文件夹 加入工作区</code>，后者才需要导入<code>qlpack.yml</code></p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">name:</span> <span class="string">getting-started/codeql-extra-queries-java</span></span><br><span class="line"><span class="attr">version:</span> <span class="number">0.0</span><span class="number">.0</span></span><br><span class="line"><span class="attr">dependencies:</span></span><br><span class="line">  <span class="comment"># This uses the latest version of the codeql/java-all library.</span></span><br><span class="line">  <span class="comment"># You may want to change to a more precise semver string.</span></span><br><span class="line">  <span class="attr">codeql/java-all:</span> <span class="string">&quot;*&quot;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">queries</span> <span class="attr">language</span>=<span class="string">&quot;java&quot;</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>之后进行一下测试，看看能不能进行查询</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> &quot;hello world&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>总的来说，QL的查询语句和<code>SQL</code>很像，类似如下结构：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import java</span><br><span class="line"> </span><br><span class="line"><span class="keyword">from</span> <span class="type">int</span> i</span><br><span class="line"><span class="keyword">where</span> i <span class="operator">=</span> <span class="number">1</span></span><br><span class="line"><span class="keyword">select</span> i</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>第一行表示，我们要引入<code>Codeql</code>的类库，因为我们要分析的项目是java的，所以在ql语句里，必不可少</li>
+<li><code>from int i</code>：表示我们要定义一个变量 i ，他的类型是int，表示我们获取所有int类型的数据</li>
+<li><code>where i = 1 表示当i等于1的时候，符合条件</code></li>
+<li><code>select i </code>表示输出 i</li>
+</ol>
+<p>一句话总结就是：在所有的整形数字<code>i</code>中，当<code>i==1</code>的时候，惊奇输出</p>
+<p>这样一来，我们就得到了QL查询的语法结构</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> [datatype] var</span><br><span class="line"><span class="keyword">where</span> <span class="keyword">condition</span>(var <span class="operator">=</span> something)</span><br><span class="line"><span class="keyword">select</span> var</span><br></pre></td></tr></table></figure>
+
+<h2 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h2><h3 id="谓词"><a href="#谓词" class="headerlink" title="谓词"></a>谓词</h3><p>和sql一样，where部分的查询条件如果过长，会显得很乱。Codeql提供一种机制，可以把你很长的查询语句，封装成函数。</p>
+<p>这个函数，就是谓词</p>
+<blockquote>
+<p>predicate 表示当前方法没有返回值。类似于 JAVA中的<code>void</code></p>
+</blockquote>
+<p>谓词方式定义如下：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">predicate name(type arg)</span><br><span class="line">&#123;</span><br><span class="line">  statements</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>定义谓词有三个要素：</p>
+<ul>
+<li>关键词 predicate（如果没有返回值），或者结果的类型（如果当前谓词内存在返回值）</li>
+<li>谓词的名称</li>
+<li>谓词的参数列表</li>
+<li>谓词主体</li>
+</ul>
+<h4 id="1-无返回值的谓词"><a href="#1-无返回值的谓词" class="headerlink" title="1. 无返回值的谓词"></a>1. 无返回值的谓词</h4><ul>
+<li>无返回值的谓词以<code>predicate</code>关键词开头。若传入的值满足谓词主体中的逻辑，则该谓词将保留该值。</li>
+<li>无返回值谓词的使用范围较小，但仍然在某些情况下扮演了很重要的一个角色</li>
+<li>举一个简单的例子</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">predicate isSmall(<span class="type">int</span> i) &#123;</span><br><span class="line">  i <span class="keyword">in</span> [<span class="number">1</span> .. <span class="number">9</span>]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> <span class="type">int</span> i </span><br><span class="line"><span class="keyword">where</span> isSmall(i) <span class="operator">/</span><span class="operator">/</span> 将整数集合i从正无穷大的数据集含，限制至 <span class="number">1</span><span class="number">-9</span></span><br><span class="line"><span class="keyword">select</span> i</span><br><span class="line"><span class="operator">/</span><span class="operator">/</span> 输出 <span class="number">1</span><span class="number">-9</span> 的数字</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/h0ld1rs/image/image/20220315144928.png"></p>
+<p>若传入的 <code>i</code> 是小于 10 的正整数，则 <code>isSmall(i)</code> 将会使得传入的集合 <code>i</code> 只保留符合条件的值，其他值将会被舍弃。</p>
+<h4 id="2-有返回值的谓词"><a href="#2-有返回值的谓词" class="headerlink" title="2. 有返回值的谓词"></a>2. 有返回值的谓词</h4><p>当需要将某些结果从谓词中返回时，与编程语言的 return 语句不同的是，谓词使用的是一个特殊变量 <code>result</code>。谓词主体的语法只是为了表述逻辑之间的关系，因此务必不要用一般编程语言的语法来理解。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> getSuccessor(<span class="type">int</span> i) &#123;</span><br><span class="line">  <span class="operator">/</span><span class="operator">/</span> 若传入的 i 位于 <span class="number">1</span><span class="number">-9</span> 内，则返回 i<span class="operator">+</span><span class="number">1</span></span><br><span class="line">  <span class="keyword">result</span> <span class="operator">=</span> i <span class="operator">+</span> <span class="number">1</span> <span class="keyword">and</span> i <span class="keyword">in</span> [<span class="number">1</span> .. <span class="number">9</span>]</span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line"><span class="keyword">select</span> getSuccessor(<span class="number">3</span>)  <span class="operator">/</span><span class="operator">/</span> 输出<span class="number">4</span></span><br><span class="line"><span class="keyword">select</span> getSuccessor(<span class="number">33</span>) <span class="operator">/</span><span class="operator">/</span> 不输出任何信息</span><br></pre></td></tr></table></figure>
+
+<p>在谓词主体中，<code>result</code> 变量可以像一般变量一样正常使用，唯一不同的是这个变量内的数据将会被返回。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">import java</span><br><span class="line"></span><br><span class="line">string getANeighbor(string country) &#123;</span><br><span class="line">    country <span class="operator">=</span> &quot;France&quot; <span class="keyword">and</span> <span class="keyword">result</span> <span class="operator">=</span> &quot;Belgium&quot;</span><br><span class="line">    <span class="keyword">or</span></span><br><span class="line">    country <span class="operator">=</span> &quot;France&quot; <span class="keyword">and</span> <span class="keyword">result</span> <span class="operator">=</span> &quot;Germany&quot;</span><br><span class="line">    <span class="keyword">or</span></span><br><span class="line">    country <span class="operator">=</span> &quot;Germany&quot; <span class="keyword">and</span> <span class="keyword">result</span> <span class="operator">=</span> &quot;Austria&quot;</span><br><span class="line">    <span class="keyword">or</span></span><br><span class="line">    country <span class="operator">=</span> &quot;Germany&quot; <span class="keyword">and</span> <span class="keyword">result</span> <span class="operator">=</span> &quot;Belgium&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> getANeighbor(&quot;France&quot;)</span><br></pre></td></tr></table></figure>
+
+<p>这里会返回两个结果：”Belgium” 与 “Germany”</p>
+<p>谓词不允许描述的数据集合个数<strong>不限于有限数量大小</strong>的。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator">/</span><span class="operator">/</span> 该谓词将使得编译报错</span><br><span class="line"><span class="type">int</span> multiplyBy4(<span class="type">int</span> i) &#123;</span><br><span class="line">  <span class="operator">/</span><span class="operator">/</span> i 是一个数据集合，此时该集合可能是「无限大小」</span><br><span class="line">  <span class="operator">/</span><span class="operator">/</span> <span class="keyword">result</span> 集合被设置为 i<span class="operator">*</span><span class="number">4</span>，意味着 <span class="keyword">result</span> 集合的大小有可能也是无限大小</span><br><span class="line">  <span class="keyword">result</span> <span class="operator">=</span> i <span class="operator">*</span> <span class="number">4</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但如果我们仍然需要定义这类函数，则必须<strong>限制集合数据大小</strong>，同时添加一个 <code>bindingset</code> 标注。该标注将会声明谓词 <code>plusOne</code> 所包含的数据集合是有限的，前提是 <code>i</code> 绑定到有限数量的数据集合。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">import java</span><br><span class="line"></span><br><span class="line">bindingset [x] bindingset [y]</span><br><span class="line">predicate pulsOne(<span class="type">int</span> x,<span class="type">int</span> y) &#123;</span><br><span class="line">    y <span class="operator">=</span> x <span class="operator">+</span> <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">from</span> <span class="type">int</span> x ,<span class="type">int</span> y</span><br><span class="line"><span class="keyword">where</span> x <span class="operator">=</span> <span class="number">42</span> <span class="keyword">and</span> pulsOne(x, y)</span><br><span class="line"><span class="keyword">select</span> x,y</span><br></pre></td></tr></table></figure>
+
+<h3 id="类"><a href="#类" class="headerlink" title="类"></a>类</h3><p>在 CodeQL 中的类，<strong>并不意味着建立一个新的对象</strong>，而只是表示特定一类的数据集合，定义一个类，需要三个步骤：</p>
+<ul>
+<li>使用关键字<code>class</code></li>
+<li>起一个类名，其中类名必须是首字母大写的。</li>
+<li>确定是从哪个类中派生出来的</li>
+</ul>
+<p>其中，基本类型 <code>boolean</code>、<code>float</code>、<code>int</code>、<code>string</code> 以及 <code>date</code> 也算在内。</p>
+<p>如官方的案例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">import java</span><br><span class="line"></span><br><span class="line">class OneTwoThree extends <span class="type">int</span> &#123;</span><br><span class="line">    OneTwoThree() &#123; <span class="operator">/</span><span class="operator">/</span> characteristic predicate</span><br><span class="line">      this <span class="operator">=</span> <span class="number">1</span> <span class="keyword">or</span> this <span class="operator">=</span> <span class="number">2</span> <span class="keyword">or</span> this <span class="operator">=</span> <span class="number">3</span></span><br><span class="line">    &#125;</span><br><span class="line">   </span><br><span class="line">    string getAString() &#123; <span class="operator">/</span><span class="operator">/</span> <span class="keyword">member</span> predicate</span><br><span class="line">      <span class="keyword">result</span> <span class="operator">=</span> &quot;One, two or three: &quot; <span class="operator">+</span> this.toString()</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">    predicate isEven() &#123; <span class="operator">/</span><span class="operator">/</span> <span class="keyword">member</span> predicate</span><br><span class="line">      this <span class="keyword">in</span> [<span class="number">1</span> .. <span class="number">2</span>] </span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">from</span> OneTwoThree i</span><br><span class="line">  <span class="keyword">where</span> i <span class="operator">=</span> <span class="number">1</span> <span class="keyword">or</span> i.getAString() <span class="operator">=</span> &quot;One, two or three: 2&quot;</span><br><span class="line">  <span class="keyword">select</span> i</span><br></pre></td></tr></table></figure>
+
+<p><code>可以直接从输出的结果中查询到数据：输出1和2</code></p>
+<p>其中，<strong>特征谓词</strong>类似于类的构造函数，它将会进一步限制当前类所表示数据的集合。它将数据集合从原先的 <code>Int</code> 集，进一步限制至 1-3 这个范围。<code>this</code> 变量表示的是当前类中所包含的数据集合。与 <code>result</code> 变量类似，<code>this</code>同样是用于表示数据集合直接的关系。</p>
+<p>此外，在特征谓词中，比较常用的一个关键字是 <code>exists</code>。该关键字的语法如下：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">exists</span>(<span class="operator">&lt;</span>variable declarations<span class="operator">&gt;</span> <span class="operator">|</span> <span class="operator">&lt;</span>formula<span class="operator">&gt;</span>)</span><br><span class="line"><span class="operator">/</span><span class="operator">/</span> 以下两个 <span class="keyword">exists</span> 所表达的意思等价。</span><br><span class="line"><span class="keyword">exists</span>(<span class="operator">&lt;</span>variable declarations<span class="operator">&gt;</span> <span class="operator">|</span> <span class="operator">&lt;</span>formula <span class="number">1</span><span class="operator">&gt;</span> <span class="operator">|</span> <span class="operator">&lt;</span>formula <span class="number">2</span><span class="operator">&gt;</span></span><br><span class="line"><span class="keyword">exists</span>(<span class="operator">&lt;</span>variable declarations<span class="operator">&gt;</span> <span class="operator">|</span> <span class="operator">&lt;</span>formula <span class="number">1</span><span class="operator">&gt;</span> <span class="keyword">and</span> <span class="operator">&lt;</span>formula <span class="number">2</span><span class="operator">&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这个关键字的使用引入了一些新的变量。如果变量中至少有一组值可以使 formula 成立，那么该值将被保留。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">import java</span><br><span class="line"></span><br><span class="line">predicate isStudent(<span class="keyword">Method</span> <span class="keyword">method</span>) &#123;</span><br><span class="line">    <span class="keyword">exists</span>( <span class="operator">|</span> method.hasName(&quot;getStudent&quot;) )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> <span class="keyword">Method</span> <span class="keyword">method</span></span><br><span class="line"><span class="keyword">where</span>  isStudent(<span class="keyword">method</span>)</span><br><span class="line"><span class="keyword">select</span> method.getName(),method.getDeclaringType()</span><br></pre></td></tr></table></figure>
+
+<h3 id="类库"><a href="#类库" class="headerlink" title="类库"></a>类库</h3><p>上面提到的<code>method</code>变量，具体和<code>java反射</code>中的变量相似，结合生成的<code>AST</code>结构的代码来看</p>
+<p>比方说，我们想获取类中所有的方法，在AST里面的Method代表的就是类当中的方法，</p>
+<p>我们想过的所有方法的调用，MethodAccess获取的就是所有方法调用</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Method</td>
+<td>方法类，表示获取当前项目中所有的方法</td>
+</tr>
+<tr>
+<td>MethodAccess</td>
+<td>方法调用类，MethodAccess call表示获取当前项目中所有方法调用</td>
+</tr>
+<tr>
+<td>Parameter</td>
+<td>参数类，Parameter表示当前项目中所有存在的参数</td>
+</tr>
+</tbody></table>
+<p>结合ql的语法，我们尝试获取micro-service-seclab项目中定义的所有方法</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import java</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> <span class="keyword">Method</span> <span class="keyword">method</span></span><br><span class="line"><span class="keyword">select</span> <span class="keyword">method</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/h0ld1rs/image/image/20211207133722.png"></p>
+<p>我们在通过Method类内置的一些方法，把结果过滤一下，比如我们获取的名字是<code>getStudent</code>的方法名称</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import java</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> <span class="keyword">Method</span> <span class="keyword">method</span></span><br><span class="line"><span class="keyword">where</span> method.hasName(&quot;getStudent&quot;)</span><br><span class="line"><span class="keyword">select</span> method.getName(),method.getDeclaringType()</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/h0ld1rs/image/image/20211207134053.png"></p>
+<blockquote>
+<p>method.getName() 获取的是当前方法的名称</p>
+<p>method.getDeclaringType() 获取的是当前方法所属class的名称。</p>
+</blockquote>
+<p>java 有 五大类库</p>
+<ul>
+<li><code>Program Elements</code>，程序元素，例如类和方法</li>
+<li><code>AST nodes</code>，抽象树节点，例如语句和表达式</li>
+<li><code>Metadata</code>，元数据，例如注解和注释</li>
+<li><code>metrics</code>，计算指标，例如循环复杂度</li>
+<li><code>Call Gragh</code>，调用图</li>
+</ul>
+<p>这些类包括：包（Package）、编译单元（CompilationUnit）、类型（Type）、方法（Method）、构造函数（Constructor）和变量（Variable）。</p>
+<p>它们共同的超类是 Element，它提供了常用的成员谓词，用于确定程序元素的名称和检查两个元素是否相互嵌套。</p>
+<p>因此可以方便的引用一个方法或构造函数的元素。此外，<code>Callable</code> 类是 <code>Method</code> 和 <code>Constructor</code> 的共同超类，可以用于此目的。</p>
+<p><img src="https://geekby.oss-cn-beijing.aliyuncs.com/MarkDown/202202181451240.png-water_print" alt="https://geekby.oss-cn-beijing.aliyuncs.com/MarkDown/202202181451240.png-water_print"></p>
+<p>具体如图所示</p>
+<h4 id="Type"><a href="#Type" class="headerlink" title="Type"></a>Type</h4><p>类 Type 有许多子类，用于表示不同种类的类型。</p>
+<ul>
+<li><code>PrimitiveType</code> 表示原始类型，即 <code>boolean</code>, <code>byte</code>, <code>char</code>, <code>double</code>, <code>float</code>, <code>int</code>, <code>long</code>, <code>short</code>；QL 也将 <code>void</code> 和 <code>nulltype</code> 归为原始类型。</li>
+<li>RefType是非原始类型，它又有几个子类。<ul>
+<li><code>Class</code></li>
+<li><code>interface</code></li>
+<li><code>enum</code></li>
+<li><code>Array</code></li>
+</ul>
+</li>
+</ul>
+<p>例如， 如果我们要查询程序中所有的<code>int</code>类型的变量</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">import java</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> Variable v, PrimitiveType pt</span><br><span class="line"><span class="keyword">where</span> pt <span class="operator">=</span> v.getType() <span class="keyword">and</span></span><br><span class="line">    pt.hasName(&quot;int&quot;)</span><br><span class="line"><span class="keyword">select</span> v</span><br></pre></td></tr></table></figure>
+
+<p>引用类型也是根据他们的声明范围来划分的</p>
+<ul>
+<li><code>TopLevelType</code> 代表在编译单元(一个 <code>.java</code> 文件)的顶层声明的类。</li>
+<li><code>NestedType</code> 是一个在另一个类型内声明的类型。<ul>
+<li><code>LoadClass</code>：在成员方法或构造方法中声明的类</li>
+<li><code>AnonymousClass</code>：匿名类</li>
+</ul>
+</li>
+</ul>
+<p>如下，可以找到所有名称与编译单元不一致的顶层类型</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import java</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> TopLevelType tl</span><br><span class="line"><span class="keyword">where</span> tl.getName() <span class="operator">!=</span> tl.getCompilationUnit().getName()</span><br><span class="line"><span class="keyword">select</span> tl</span><br></pre></td></tr></table></figure>
+
+<p>最后，该库还有一些单例子类，如：<code>TypeObject</code>、<code>TypeCloneable</code>、<code>TypeRuntime</code>、<code>TypeSerializable</code>、TypeString、<code>TypeSystem</code> 和 <code>TypeClass</code>。每个 CodeQL 类都代表其名称所暗示的标准 Java 类。</p>
+<p>一个找到所有直接继承 <code>Object</code> 的嵌套类的查询</p>
+<blockquote>
+<p>NestedClass  —-&gt; 嵌套类</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import java</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> NestedClass nc</span><br><span class="line"><span class="keyword">where</span> nc.getASupertype() instanceof TypeObject</span><br><span class="line"><span class="keyword">select</span> nc</span><br></pre></td></tr></table></figure>
+
+<h4 id="Generics"><a href="#Generics" class="headerlink" title="Generics"></a>Generics</h4><p><code>GenericType</code> 是 <code>GenericInterface</code> 或 <code>GenericClass</code>。它代表了一个泛型型声明，如 Java 标准库中的接口 <code>java.util.Map</code>:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> java.util.;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Map</span>&lt;K, V&gt; &#123;</span><br><span class="line">    <span class="type">int</span> <span class="title function_">size</span><span class="params">()</span>;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>类型参数，如本例中的 K 和 V，由 <code>TypeVariable</code> 类表示。</p>
+<p>一个泛型的参数化实例提供了一个具体实现该类型的参数，如 <code>Map&lt;String, File&gt;</code>。这样的类型由 <code>ParameterizedType</code> 表示，它与 <code>GenericType</code> 不同。要从 <code>ParameterizedType</code> 到其相应的 <code>GenericType</code>，可以使用谓词 <code>getSourceDeclaration</code>。</p>
+<p>我们可以如下查到<code>java.util.Map</code> 的所有参数化实例</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">import java</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> GenericInterface map , ParameterizedType pt </span><br><span class="line"><span class="keyword">where</span> map.hasQualifiedName(&quot;java.util&quot;,&quot;Map&quot;) <span class="keyword">and</span></span><br><span class="line">    pt.getSourceDeclaration()<span class="operator">=</span>map</span><br><span class="line">    </span><br><span class="line"><span class="keyword">select</span> pt</span><br></pre></td></tr></table></figure>
+
+<p>一般来说，泛型需要限制类型参数可以与哪些类型绑定。例如，一个从字符串到数字的映射类型可以被声明如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">StringToNumMap</span>&lt;N <span class="keyword">extends</span> <span class="title class_">Number</span>&gt; <span class="keyword">implements</span> <span class="title class_">Map</span>&lt;String, N&gt; &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这意味着 <code>StringToNumberMap</code> 的参数化实例只能使用 <code>Number</code> 或它的一个子类型来实例化类型参数 N，而不能用其它类，如说 <code>File</code>。我们说 <code>N</code> 是一个有界的类型参数，<code>Number</code> 是它的上界。在 QL 中，一个类型变量可以用谓词 <code>getATypeBound</code> 来查询它的类型边界。类型边界本身由 <code>TypeBound</code> 类表示，它有一个成员谓词 <code>getType</code> 来检索变量被约束的类型。</p>
+<p>如下的查询找到所有以<code>Number</code>类型为边界的变量</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java</span><br><span class="line"></span><br><span class="line">from TypeVariable tv , TypeBound tb</span><br><span class="line"><span class="type">where</span> <span class="variable">tb</span> <span class="operator">=</span> tv.getATypeBound() and</span><br><span class="line">    tb.getType().hasQualifiedName(<span class="string">&quot;java.lang&quot;</span>, <span class="string">&quot;Number&quot;</span>)</span><br><span class="line"></span><br><span class="line">select tv</span><br></pre></td></tr></table></figure>
+
+<p>为了处理那些在泛型出现之前的遗留代码，每个泛型都有一个没有任何类型参数的 「原始」版本。在 CodeQL 库中，原始类型用 <code>RawType</code> 类表示，它有预期的子类 <code>RawClass</code> 和 <code>RawInterface</code>。同样，有一个谓词 <code>getSourceDeclaration</code> 用于获得相应的通用类型。如下的<a target="_blank" rel="noopener" href="https://lgtm.com/query/4032913402499547882/">查询</a>可以找到（原始）类型 Map 的变量。实际上，现在仍然有许多项目在使用原始类型的 Map。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java</span><br><span class="line"></span><br><span class="line">from Variable v ,RawType rt</span><br><span class="line"><span class="type">where</span> <span class="variable">rt</span> <span class="operator">=</span> v.getType() and rt.getSourceDeclaration().hasQualifiedName(<span class="string">&quot;java.util&quot;</span>, <span class="string">&quot;Map&quot;</span>)</span><br><span class="line">select v</span><br></pre></td></tr></table></figure>
+
+<h4 id="Variable"><a href="#Variable" class="headerlink" title="Variable"></a>Variable</h4><p>类 <code>Variable</code> 表示 Java 中的变量，它可以是一个类的成员字段（无论是否静态），也可以是一个局部变量，或者是函数的参数。因此，有三个子类来满足这些特殊情况的需要。</p>
+<ul>
+<li><code>Field</code> ：字段</li>
+<li><code>LocalVariableDecl</code> ：本地变量.</li>
+<li><code>Parameter</code> ：方法或构造函数的参数。</li>
+</ul>
+<h3 id="AST抽象语法树"><a href="#AST抽象语法树" class="headerlink" title="AST抽象语法树"></a>AST抽象语法树</h3><p>该类中包含了抽象语法树的节点，也就是语句（QL 中的类 <code>Stmt</code>）和表达式（QL 中的类 <code>Expr</code>）。关于标准 QL 库中可用的表达式和语句类型的完整列表，可以参考  <a target="_blank" rel="noopener" href="https://codeql.github.com/docs/codeql-language-guides/abstract-syntax-tree-classes-for-working-with-java-programs/">https://codeql.github.com/docs/codeql-language-guides/abstract-syntax-tree-classes-for-working-with-java-programs/</a></p>
+<p><code>Expr</code> 和 <code>Stmt</code> 都提供了成员谓词来获取程序的抽象语法树：</p>
+<ul>
+<li><code>Expr.getAChildExpr</code> 返回一个给定表达式的子表达式。</li>
+<li><code>Stmt.getAChild</code> 返回直接嵌套在给定语句中的语句或表达式。</li>
+<li><code>Expr.getParent</code> 和 <code>Stmt.getParent</code> 返回 AST 节点的父节点</li>
+</ul>
+<p>下面的<a target="_blank" rel="noopener" href="https://lgtm.com/query/1947757851560375919/">查询</a>可以找到所有父类为返回语句的表达式。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import java</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> Expr e</span><br><span class="line"><span class="keyword">where</span> e.getParent() instanceof ReturnStmt</span><br><span class="line"><span class="keyword">select</span> e</span><br></pre></td></tr></table></figure>
+
+<p>因此，程序中如果包含：<code>return x + y</code> 子表达式，QL 的查询结果将会返回：<code>x + y</code>。</p>
+<p>下面的<a target="_blank" rel="noopener" href="https://lgtm.com/query/1989464153689219612/">查询</a>可以找到某个表达式的父级为 if 语句：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java</span><br><span class="line"></span><br><span class="line">from Stmt s</span><br><span class="line">where s.getParent() <span class="keyword">instanceof</span> IfStmt</span><br><span class="line">select s</span><br></pre></td></tr></table></figure>
+
+<p>一个<a target="_blank" rel="noopener" href="https://lgtm.com/query/1016821702972128245/">查询</a>的例子，可以找到方法体。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java</span><br><span class="line"></span><br><span class="line">from Stmt s </span><br><span class="line">where s.getParent() <span class="keyword">instanceof</span> Method</span><br><span class="line">select s</span><br></pre></td></tr></table></figure>
+
+<p>如上的这些例子可知，表达式的父节点并不总是表达式：它也可能是一个语句，例如 <code>IfStmt</code>。同样，语句的父节点也不总是一个语句：它也可能是一个方法或构造函数。为了抓住这一点，QL Java 库提供了两个抽象类 <code>ExprParent</code> 和 <code>StmtParent</code>，前者代表可能是表达式的父节点的任何节点，后者代表可能是语句的父节点的任何节点。</p>
+<h3 id="Metadata（元数据）"><a href="#Metadata（元数据）" class="headerlink" title="Metadata（元数据）"></a>Metadata（元数据）</h3><p>除了 Java 程序代码本身之外，Java 程序还有几种元数据。其中包括有注解(Annotations) 和 Javadoc 注释。由于这些元数据对于加强代码分析或者是作为分析目标本身都很有用处，因此，QL 库定义了用于访问这些元数据的类。</p>
+<p>对于注解(Annotations)，类 <code>Annotatable</code> 是所有可以被注解的程序元素的超类。这包括包、引用类型、字段、方法、构造函数和声明的局部变量。对于每个这样的元素，类中的谓词 <code>getAnAnnotation</code> 可以检索该元素可能有的任何注释。例如，下面的<a target="_blank" rel="noopener" href="https://lgtm.com/query/3206112561297137365/">查询</a>可以找到构造函数上的所有注解。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java</span><br><span class="line"></span><br><span class="line">from Constructor c </span><br><span class="line">select c.getAnAnnotation()</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+<h3 id="设置-source和sink"><a href="#设置-source和sink" class="headerlink" title="设置 source和sink"></a>设置 source和sink</h3><p>在自动化代码安全审计论中有一个核心的三元组概念：source,sink，sanitizer</p>
+<blockquote>
+<p>source是指漏洞污染链条的输入点。比如获取http请求的参数部分，就是非常明显的Source。</p>
+<p>sink是指漏洞污染链条的执行点，比如SQL注入漏洞，最终执行SQL语句的函数就是sink(这个函数可能叫query或者exeSql，或者其它)。</p>
+<p>sanitizer又叫净化函数，是指在整个的漏洞链条当中，如果存在一个方法阻断了整个传递链，那么这个方法就叫sanitizer。</p>
+</blockquote>
+<p>只有source和sink同时存在，并且从source到sink的链路是通的，才表示当前的漏洞是存在的。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/h0ld1rs/image/image/20211207145013.png"></p>
+<p>新定义的 <code>Config</code> 类继承于 <code>TaintTracking::Configuration</code>。类中重载的 <code>isSource</code> 谓语定义为污点的源头，而 <code>isSink</code> 定义为污点汇聚点。</p>
+<p>在codeql中，我们通过</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">override predicate <span class="title function_">isSource</span><span class="params">(DataFlow::Node src)</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>来设置source</p>
+<p>那么，我们在此靶场中的source是什么？</p>
+<p>可以看到，我们所使用的是Springboot的框架，那么source就是http参数入口的代码参数，在<code>controller</code>中可以找到</p>
+<p><img src="https://cdn.jsdelivr.net/gh/h0ld1rs/image/image/20211207145408.png"></p>
+<p>这里的source就是<code>username</code></p>
+<p><img src="C:\Users\12451\AppData\Roaming\Typora\typora-user-images\image-20211207145542653.png" alt="image-20211207145542653"></p>
+<p>同理，这里的source就是<code>Student</code>对象</p>
+<p>但是，在这里，我们将source设置为</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">override predicate <span class="title function_">isSource</span><span class="params">(DataFlow::Node src)</span> &#123; src <span class="keyword">instanceof</span> RemoteFlowSource &#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>这是SDK自带的规则，里面包含了大多数常用的Source入口，其中也包括Springboot，我们可以直接使用</p>
+<p>instance则是codeql提供的语法</p>
+</blockquote>
+<p>在codeql中，我们通过</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">override predicate <span class="title function_">isSink</span><span class="params">(DataFlow::Node sink)</span>&#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>来设置sink</p>
+<p>在这里，我们将query方法(Method)的调用(MethodAccess)，所以我们设置sink为</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">override predicate <span class="title function_">isSink</span><span class="params">(DataFlow::Node sink)</span> &#123;</span><br><span class="line">    exists(Method method, MethodAccess call |</span><br><span class="line">      method.hasName(<span class="string">&quot;query&quot;</span>)</span><br><span class="line">      and</span><br><span class="line">      call.getMethod() = method and</span><br><span class="line">      sink.asExpr() = call.getArgument(<span class="number">0</span>)</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Flow数据流"><a href="#Flow数据流" class="headerlink" title="Flow数据流"></a>Flow数据流</h3><p>设置好了source和sink，我们就相当于搞定了首和尾，但是，只有连通才能决定是否存在漏洞</p>
+<p>一个受污染的变量，能够毫无阻拦的流传到危险函数，就证明存在漏洞。</p>
+<p>这个连通工作就是使用codeql引擎本身来完成的。我们通过使用config.hasFlowPath(source,sink)来判断是否连通，</p>
+<p>比如</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">from VulConfig config, DataFlow::PathNode source, DataFlow::PathNode sink</span><br><span class="line">where config.hasFlowPath(source, sink)</span><br><span class="line">select source.getNode(), source, sink, <span class="string">&quot;source&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>我们传递给了config.hasFlowPath(Source,sink)我们定义好的source和sink，系统会自动帮我们判断是否存在漏洞</p>
+<h2 id="初步codeql代码"><a href="#初步codeql代码" class="headerlink" title="初步codeql代码"></a>初步codeql代码</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @id java/examples/vuldemo</span></span><br><span class="line"><span class="comment"> * @name Sql-Injection</span></span><br><span class="line"><span class="comment"> * @description Sql-Injection</span></span><br><span class="line"><span class="comment"> * @kind path-problem</span></span><br><span class="line"><span class="comment"> * @problem.severity warning</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line">import java</span><br><span class="line">import semmle.code.java.dataflow.FlowSources</span><br><span class="line">import semmle.code.java.security.QueryInjection</span><br><span class="line">import DataFlow::PathGraph</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class VulConfig extends TaintTracking::Configuration &#123;</span><br><span class="line">  VulConfig() &#123; this <span class="operator">=</span> &quot;SqlInjectionConfig&quot; &#125;</span><br><span class="line"></span><br><span class="line">  override predicate isSource(DataFlow::Node src) &#123; src instanceof RemoteFlowSource &#125;</span><br><span class="line"></span><br><span class="line">  override predicate isSink(DataFlow::Node sink) &#123;</span><br><span class="line">    <span class="keyword">exists</span>(<span class="keyword">Method</span> <span class="keyword">method</span>, MethodAccess <span class="keyword">call</span> <span class="operator">|</span></span><br><span class="line">      method.hasName(&quot;query&quot;)</span><br><span class="line">      <span class="keyword">and</span></span><br><span class="line">      call.getMethod() <span class="operator">=</span> <span class="keyword">method</span> <span class="keyword">and</span></span><br><span class="line">      sink.asExpr() <span class="operator">=</span> call.getArgument(<span class="number">0</span>)</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> VulConfig config, DataFlow::PathNode source, DataFlow::PathNode sink</span><br><span class="line"><span class="keyword">where</span> config.hasFlowPath(source, sink)</span><br><span class="line"><span class="keyword">select</span> source.getNode(), source, sink, &quot;source&quot;</span><br></pre></td></tr></table></figure>
+
+<p>注意：上面的注释和其他语言是不一样的，不能删除，也是程序的一部分。因为我们在生成测试报告的时候，上面的name，description等信息会写入审计报告中。</p>
+<p>这样，我们就拿到了最终的漏洞</p>
+<p><img src="https://cdn.jsdelivr.net/gh/h0ld1rs/image/image/20211207160825.png"></p>
+<h2 id="错误修改"><a href="#错误修改" class="headerlink" title="错误修改"></a>错误修改</h2><p>我们发现，上面自动审计出来的漏洞中，发现了一个误报</p>
+<p><img src="https://cdn.jsdelivr.net/gh/h0ld1rs/image/image/20211207161032.png"></p>
+<p>这个方法的参数是 List&lt;long&gt;，不可能存在注入漏洞</p>
+<p>这说明，我们的规则里，对于List&lt;long&gt;型，甚至List&lt;Integer&gt;类型都会产生误报。source误把这种类型的参数涵盖了</p>
+<p>我们需要采取手段消除这种误报,这个手段就是<code>isSanitizer</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/h0ld1rs/image/image/20211207161647.png"></p>
+<blockquote>
+<p>isSanitizer是codeql的类TaintTracking::Configuration提供的净化方法。他的函数是：</p>
+<p>override predicate isSanitizer(DataFlow::Node node){}</p>
+<p>在Codeql自带的默认规则里，对当前的节点做了相应的判断</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">override predicate isSantizer(DataFlow::Node node)&#123;</span><br><span class="line"></span><br><span class="line">	node.getType() instanceof PrimitiveType <span class="keyword">or</span></span><br><span class="line"></span><br><span class="line">	node.getType() instanceof BoxedType <span class="keyword">or</span></span><br><span class="line"></span><br><span class="line">	node.getType() instanceof NumberType</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>表示如果当前节点是上面提到的基础类型，那么此污染链将被净化阻断，漏洞将不存在</p>
+<p>由于Codeql检测SQL注入里的isSanitizer方法，只对基础类型做了判断，并没有对这种复合类型做判断，才引起了这次误报的问题</p>
+<p>那么我们只要将这种符合类型的方法加入到isSanitizer，即可消除这种误报</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">override predicate <span class="title function_">isSanitizer</span><span class="params">(DataFlow::Node node)</span> &#123;</span><br><span class="line">    node.getType() <span class="keyword">instanceof</span> PrimitiveType or</span><br><span class="line">    node.getType() <span class="keyword">instanceof</span> BoxedType or</span><br><span class="line">    node.getType() <span class="keyword">instanceof</span> NumberType or</span><br><span class="line">    <span class="title function_">exists</span><span class="params">(ParameterizedType pt| node.getType()</span> = pt and pt.getTypeArgument(<span class="number">0</span>) <span class="keyword">instanceof</span> NumberType )</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上代码的意思是：如果当前node节点的类型为基础类型，数字类型和泛型数字类型(比如List)时，就切断数据流，认为数据流断掉了，不会继续往下检测。</p>
+<p>重新执行query，发现误报已经消除。</p>
+<h2 id="修改2"><a href="#修改2" class="headerlink" title="修改2"></a>修改2</h2><p>我们发现，如下的sql没有被codeql捕捉到</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> List&lt;Student&gt; <span class="title function_">getStudentWithOptional</span><span class="params">(Optional&lt;String&gt; username)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">sqlWithOptional</span> <span class="operator">=</span> <span class="string">&quot;select * from students where username like &#x27;%&quot;</span> + username.get() + <span class="string">&quot;%&#x27;&quot;</span>;</span><br><span class="line">        <span class="comment">//String sql = &quot;select * from students where username like ?&quot;;</span></span><br><span class="line">        <span class="keyword">return</span> jdbcTemplate.query(sqlWithOptional, ROW_MAPPER);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>漏报理论上讲是不能接受的。如果出现误报我们还可以通过人工筛选来解决，但是漏报会导致很多漏洞流经下一个环节到线上，从而产生损失。</p>
+<p>那我们如果通过CodeQL来解决漏报问题呢？答案就是通过<code>isAdditionalTaintStep</code>方法。</p>
+<p>实现原理就是：&#x3D;&#x3D;断了就给他接上&#x3D;&#x3D;</p>
+<p><img src="https://cdn.jsdelivr.net/gh/h0ld1rs/image/image/20211207163443.png"></p>
+<p>isAddtionalTaintStep方法是Codeql的类TainTracking::Configuration提供的方法，他的原型是：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">override predicate <span class="title function_">isAdditionalTaintStep</span><span class="params">(DataFlow::Node node1, DataFlow::Node node2)</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>他的作用是<code>将一个可控节点A强制传递给另外一个节点B，那么节点B也就成了可控节点</code></p>
+<p>多次测试以后，发现是<code>username.get()</code>断掉了，大概是因为<code>Optional</code>这种类型的使用没有在Codeql语法库里</p>
+<p>那么，我们让username强制流转到<code>username.get()</code>，这样username.get()就变得可控了，这样就能识别出这个注入漏洞了。</p>
+<p>修改codeql语句</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @id java/examples/vuldemo</span></span><br><span class="line"><span class="comment"> * @name Sql-Injection</span></span><br><span class="line"><span class="comment"> * @description Sql-Injection</span></span><br><span class="line"><span class="comment"> * @kind path-problem</span></span><br><span class="line"><span class="comment"> * @problem.severity warning</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line">import java</span><br><span class="line">import semmle.code.java.dataflow.FlowSources</span><br><span class="line">import semmle.code.java.security.QueryInjection</span><br><span class="line">import DataFlow::PathGraph</span><br><span class="line"></span><br><span class="line">predicate isTaintedString(Expr expSrc, Expr expDest) &#123;</span><br><span class="line">    <span class="keyword">exists</span>(<span class="keyword">Method</span> <span class="keyword">method</span>, MethodAccess <span class="keyword">call</span>, MethodAccess call1 <span class="operator">|</span> expSrc <span class="operator">=</span> call1.getArgument(<span class="number">0</span>) <span class="keyword">and</span> expDest<span class="operator">=</span><span class="keyword">call</span> <span class="keyword">and</span> call.getMethod() <span class="operator">=</span> <span class="keyword">method</span> <span class="keyword">and</span> method.hasName(&quot;get&quot;) <span class="keyword">and</span> method.getDeclaringType().toString() <span class="operator">=</span> &quot;Optional&lt;String&gt;&quot; <span class="keyword">and</span> call1.getArgument(<span class="number">0</span>).getType().toString() <span class="operator">=</span> &quot;Optional&lt;String&gt;&quot;  )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class VulConfig extends TaintTracking::Configuration &#123;</span><br><span class="line">  VulConfig() &#123; this <span class="operator">=</span> &quot;SqlInjectionConfig&quot; &#125;</span><br><span class="line"></span><br><span class="line">  override predicate isSource(DataFlow::Node src) &#123; src instanceof RemoteFlowSource &#125;</span><br><span class="line"></span><br><span class="line">  override predicate isSanitizer(DataFlow::Node node) &#123;</span><br><span class="line">    node.getType() instanceof PrimitiveType <span class="keyword">or</span></span><br><span class="line">    node.getType() instanceof BoxedType <span class="keyword">or</span></span><br><span class="line">    node.getType() instanceof NumberType <span class="keyword">or</span></span><br><span class="line">    <span class="keyword">exists</span>(ParameterizedType pt<span class="operator">|</span> node.getType() <span class="operator">=</span> pt <span class="keyword">and</span> pt.getTypeArgument(<span class="number">0</span>) instanceof NumberType )</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  override predicate isSink(DataFlow::Node sink) &#123;</span><br><span class="line">    <span class="keyword">exists</span>(<span class="keyword">Method</span> <span class="keyword">method</span>, MethodAccess <span class="keyword">call</span> <span class="operator">|</span></span><br><span class="line">      method.hasName(&quot;query&quot;)</span><br><span class="line">      <span class="keyword">and</span></span><br><span class="line">      call.getMethod() <span class="operator">=</span> <span class="keyword">method</span> <span class="keyword">and</span></span><br><span class="line">      sink.asExpr() <span class="operator">=</span> call.getArgument(<span class="number">0</span>)</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">override predicate isAdditionalTaintStep(DataFlow::Node node1, DataFlow::Node node2) &#123;</span><br><span class="line">    isTaintedString(node1.asExpr(), node2.asExpr())</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> VulConfig config, DataFlow::PathNode source, DataFlow::PathNode sink</span><br><span class="line"><span class="keyword">where</span> config.hasFlowPath(source, sink)</span><br><span class="line"><span class="keyword">select</span> source.getNode(), source, sink, &quot;source&quot;</span><br></pre></td></tr></table></figure>
+
+<p>上述，我们实现了一个<code>isTaintedString</code>谓词，并使用exists子查询方式实现了强制把<code>Optional&lt;String&gt; username</code>关联<code>    Optional&lt;String&gt; username.get()</code></p>
+<p>最后，注入就可以被跑出来了</p>
+<p><img src="https://cdn.jsdelivr.net/gh/h0ld1rs/image/image/20211207164341.png"></p>
+<p>我们就简单粗暴的把数据流连通了。</p>
+<h2 id="Lombok问题"><a href="#Lombok问题" class="headerlink" title="Lombok问题"></a>Lombok问题</h2><p>lombok是非常有名的java类，通过注解省略了很多不必要的臃肿代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.l4yn3.microserviceseclab.data;</span><br><span class="line"><span class="keyword">import</span> lombok.Data;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@AllArgsConstructor</span></span><br><span class="line"><span class="meta">@NoArgsConstructor</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Student</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> id;</span><br><span class="line">    <span class="keyword">private</span> String username;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> sex;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> age;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是，这样的话，由注解生成的代码，导致codeql无法获取到lombok自动生成的代码，所以就导致使用了lombok的代码即使存在漏洞，也无法被识别的问题</p>
+<p>再codeql里的issue里面，有人给出了这个问题的解决办法,如下</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/github/codeql/issues/4984#:~:text=Unfortunately%20Lombok%20does%20not%20work%20with%20the%20CodeQL,the%20source%20files%20before%20running%20CodeQL%20as%20follows%3A">https://github.com/github/codeql/issues/4984#:~:text&#x3D;Unfortunately%20Lombok%20does%20not%20work%20with%20the%20CodeQL,the%20source%20files%20before%20running%20CodeQL%20as%20follows%3A</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># get a copy of lombok.jar</span><br><span class="line">wget https:<span class="comment">//projectlombok.org/downloads/lombok.jar -O &quot;lombok.jar&quot;</span></span><br><span class="line"># run <span class="string">&quot;delombok&quot;</span> on the source files and write the generated files to a folder named <span class="string">&quot;delombok&quot;</span></span><br><span class="line">java -jar <span class="string">&quot;lombok.jar&quot;</span> delombok -n --onlyChanged . -d <span class="string">&quot;delombok&quot;</span></span><br><span class="line"># remove <span class="string">&quot;generated by&quot;</span> comments</span><br><span class="line">find <span class="string">&quot;delombok&quot;</span> -name <span class="string">&#x27;*.java&#x27;</span> -exec sed <span class="string">&#x27;/Generated by delombok/d&#x27;</span> -i <span class="string">&#x27;&#123;&#125;&#x27;</span> <span class="string">&#x27;;&#x27;</span></span><br><span class="line"># remove any left-over <span class="keyword">import</span> statements</span><br><span class="line">find <span class="string">&quot;delombok&quot;</span> -name <span class="string">&#x27;*.java&#x27;</span> -exec sed <span class="string">&#x27;/import lombok/d&#x27;</span> -i <span class="string">&#x27;&#123;&#125;&#x27;</span> <span class="string">&#x27;;&#x27;</span></span><br><span class="line"># copy delombok<span class="string">&#x27;d files over the original ones</span></span><br><span class="line"><span class="string">cp -r &quot;delombok/.&quot; &quot;./&quot;</span></span><br><span class="line"><span class="string"># remove the &quot;delombok&quot; folder</span></span><br><span class="line"><span class="string">rm -rf &quot;delombok&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>上面实现的功能是，去掉代码里lombok注解，并且还原<code>getter</code>和<code>setter</code>方法的java代码，从而使得codeql的flow流能够顺利流下去。从而检索到相应的漏洞</p>
+<p>(根据对应的操作系统自动转化相应的方法)</p>
+<h2 id="最终优化"><a href="#最终优化" class="headerlink" title="最终优化"></a>最终优化</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator">*</span> <span class="variable">@id</span> java<span class="operator">/</span>examples<span class="operator">/</span>vuldemo</span><br><span class="line"> <span class="operator">*</span> <span class="variable">@name</span> <span class="keyword">Sql</span><span class="operator">-</span>Injection</span><br><span class="line"> <span class="operator">*</span> <span class="variable">@description</span> <span class="keyword">Sql</span><span class="operator">-</span>Injection</span><br><span class="line"> <span class="operator">*</span> <span class="variable">@kind</span> path<span class="operator">-</span>problem</span><br><span class="line"> <span class="operator">*</span> <span class="variable">@problem</span>.severity warning</span><br><span class="line"> <span class="operator">*</span><span class="operator">/</span></span><br><span class="line"></span><br><span class="line">import java</span><br><span class="line">import semmle.code.java.dataflow.FlowSources</span><br><span class="line">import semmle.code.java.security.QueryInjection</span><br><span class="line">import DataFlow::PathGraph</span><br><span class="line"></span><br><span class="line">predicate isTaintedString(Expr expSrc, Expr expDest) &#123;</span><br><span class="line">    <span class="keyword">exists</span>(<span class="keyword">Method</span> <span class="keyword">method</span>, MethodAccess <span class="keyword">call</span>, MethodAccess call1 <span class="operator">|</span> expSrc <span class="operator">=</span> call1.getArgument(<span class="number">0</span>) <span class="keyword">and</span> expDest<span class="operator">=</span><span class="keyword">call</span> <span class="keyword">and</span> call.getMethod() <span class="operator">=</span> <span class="keyword">method</span> <span class="keyword">and</span> method.hasName(&quot;get&quot;) <span class="keyword">and</span> method.getDeclaringType().toString() <span class="operator">=</span> &quot;Optional&lt;String&gt;&quot; <span class="keyword">and</span> call1.getArgument(<span class="number">0</span>).getType().toString() <span class="operator">=</span> &quot;Optional&lt;String&gt;&quot;  )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class VulConfig extends TaintTracking::Configuration &#123;</span><br><span class="line">  VulConfig() &#123; this <span class="operator">=</span> &quot;SqlInjectionConfig&quot; &#125;</span><br><span class="line"></span><br><span class="line">  override predicate isSource(DataFlow::Node src) &#123; src instanceof RemoteFlowSource &#125;</span><br><span class="line"></span><br><span class="line">  override predicate isSanitizer(DataFlow::Node node) &#123;</span><br><span class="line">    node.getType() instanceof PrimitiveType <span class="keyword">or</span></span><br><span class="line">    node.getType() instanceof BoxedType <span class="keyword">or</span></span><br><span class="line">    node.getType() instanceof NumberType <span class="keyword">or</span></span><br><span class="line">    <span class="keyword">exists</span>(ParameterizedType pt<span class="operator">|</span> node.getType() <span class="operator">=</span> pt <span class="keyword">and</span> pt.getTypeArgument(<span class="number">0</span>) instanceof NumberType )</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  override predicate isSink(DataFlow::Node sink) &#123;</span><br><span class="line">    <span class="keyword">exists</span>(<span class="keyword">Method</span> <span class="keyword">method</span>, MethodAccess <span class="keyword">call</span> <span class="operator">|</span></span><br><span class="line">      method.hasName(&quot;query&quot;)</span><br><span class="line">      <span class="keyword">and</span></span><br><span class="line">      call.getMethod() <span class="operator">=</span> <span class="keyword">method</span> <span class="keyword">and</span></span><br><span class="line">      sink.asExpr() <span class="operator">=</span> call.getArgument(<span class="number">0</span>)</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  override predicate isAdditionalTaintStep(DataFlow::Node node1, DataFlow::Node node2) &#123;</span><br><span class="line">    isTaintedString(node1.asExpr(), node2.asExpr())</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> VulConfig config, DataFlow::PathNode source, DataFlow::PathNode sink</span><br><span class="line"><span class="keyword">where</span> config.hasFlowPath(source, sink)</span><br><span class="line"><span class="keyword">select</span> source.getNode(), source, sink, &quot;source&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="codeql进阶"><a href="#codeql进阶" class="headerlink" title="codeql进阶"></a>codeql进阶</h2><p>我们再上面的案例中看到了<code>instanceof</code>，如果我们去看codeql自带的规则库，会发现大量的<code>instanceof</code>语句</p>
+<p><img src="https://cdn.jsdelivr.net/gh/h0ld1rs/image/image/20211207190246.png"></p>
+<p>我们已经知道，可以使用exists(|)这种方式来定义source 和sink，但是如果，source&#x2F;sink特别复杂（比如，我们为了规则通用，可能要适配Springboot，Thrift RPC，Servlet等source），如果我们把这些都在一个子查询内完成，比如，condition 1 or condition 2 or condition3 ，这样就比较难维护，比较冗杂</p>
+<p>instanceof给我们提供了一种机制，我们只需要定义一个abstract class，比如这个案例当中的:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** A data flow source of remote user input. */</span></span><br><span class="line"><span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title class_">RemoteFlowSource</span> <span class="keyword">extends</span> <span class="title class_">DataFlow</span>::Node &#123;</span><br><span class="line">  <span class="comment">/** Gets a string that describes the type of this remote flow source. */</span></span><br><span class="line">  <span class="keyword">abstract</span> string <span class="title function_">getSourceType</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后再isSource方法里进行instanceof，判断src是RemoteFlowSource就可以了</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">override predicate <span class="title function_">isSource</span><span class="params">(DataFlow::Node src)</span> &#123;</span><br><span class="line">    src <span class="keyword">instanceof</span> RemoteFlowSource</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里的话，java和codeql会有一些不一样。</p>
+<p>我们继承了一个abstract抽象类，但是没有实现方法，怎么获得source？</p>
+<p>codeql的特性：只要继承了RemoteFlowSource类，那么所有的子类就会被调用，他所代表的source也会被加载。我们在RemoteFlowSource下可以看到非常多的子类，他们的结果都会被用and串联加载</p>
+<p><img src="https://cdn.jsdelivr.net/gh/h0ld1rs/image/image/20211207202215.png"></p>
+<h2 id="递归问题"><a href="#递归问题" class="headerlink" title="递归问题"></a>递归问题</h2><p>递归调用可以帮我们解决一类问题：我们不确定需要调用多少次方法才能得到我们想要的结果的时候，我们就可以选择递归调用</p>
+<p>CodeQL里面的递归调用语法是：在谓词方法的后面跟*或者+，来表示调用0次以上和1次以上（和正则类似），0次会打印自己。</p>
+<p>我们来举一个例子：</p>
+<p>在java语言里，我们可以使用class嵌套class，多个内嵌class的时候，我们需要知道最外层的class是什么怎么办？</p>
+<p>比如</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">StudentService</span> &#123;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">innerOne</span> &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="title function_">innerOne</span><span class="params">()</span>&#123;&#125;</span><br><span class="line"> </span><br><span class="line">        <span class="keyword">class</span> <span class="title class_">innerTwo</span> &#123;</span><br><span class="line">            <span class="keyword">public</span> <span class="title function_">innerTwo</span><span class="params">()</span>&#123;&#125;</span><br><span class="line"> </span><br><span class="line">            <span class="keyword">public</span> String <span class="title function_">Nihao</span><span class="params">()</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="string">&quot;Nihao&quot;</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">public</span> String <span class="title function_">Hi</span><span class="params">()</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;hello&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们需要根据innnerTwo类定位到最外层的StudentService类，怎么办？</p>
+<p>按照非递归的写法，我们可以这样做</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import java</span><br><span class="line"> </span><br><span class="line"><span class="keyword">from</span> Class classes</span><br><span class="line"><span class="keyword">where</span> classes.getName().toString() <span class="operator">=</span> &quot;innerTwo&quot;</span><br><span class="line"><span class="keyword">select</span> classes.getEnclosingType().getEnclosingType()   <span class="operator">/</span><span class="operator">/</span> getEnclosingtype获取作用域</span><br></pre></td></tr></table></figure>
+
+<p>我们通过连续2次调用getEnclosingType方法是能够拿到最外层的StudentService的。</p>
+<p>但正如我们开始所说，实际情况是我们并不清楚一开始有多少层外嵌，而且多个文件可能每个嵌套数量都不一样，我们没办法通过调用的次数来解决此问题，我们就需要用递归的方式去解决。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> Class classes</span><br><span class="line"><span class="keyword">where</span> classes.getName().toString() <span class="operator">=</span> &quot;innerTwo&quot;</span><br><span class="line"><span class="keyword">select</span> classes.getEnclosingType<span class="operator">+</span>()   <span class="operator">/</span><span class="operator">/</span> 获取作用域</span><br></pre></td></tr></table></figure>
+
+<p>也可以自己封装方法来调用</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">import java</span><br><span class="line"> </span><br><span class="line">RefType demo(Class classes) &#123;</span><br><span class="line">    <span class="keyword">result</span> <span class="operator">=</span> classes.getEnclosingType()</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">from</span> Class classes</span><br><span class="line"><span class="keyword">where</span> classes.getName().toString() <span class="operator">=</span> &quot;innerTwo&quot;</span><br><span class="line"><span class="keyword">select</span> demo<span class="operator">*</span>(classes)   <span class="operator">/</span><span class="operator">/</span> 获取作用域</span><br></pre></td></tr></table></figure>
+
+<h2 id="强制类型转换问题"><a href="#强制类型转换问题" class="headerlink" title="强制类型转换问题"></a>强制类型转换问题</h2><p>在CodeQL的规则集里，我们会看到很多类型转换的代码，比如：</p>
+<p>打印所有方法的参数名称和类型</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import java</span><br><span class="line"> </span><br><span class="line"><span class="keyword">from</span> <span class="keyword">Parameter</span> param</span><br><span class="line"><span class="keyword">select</span> param, param.getType()</span><br></pre></td></tr></table></figure>
+
+<p>换成如下语句</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import java</span><br><span class="line"> </span><br><span class="line"><span class="keyword">from</span> <span class="keyword">Parameter</span> param</span><br><span class="line"><span class="keyword">select</span> param, param.getType().(RefType)</span><br></pre></td></tr></table></figure>
+
+<p>这样就强制转换成了RefType，意思就是从前面的结果中过滤出<code>RefType</code>的类型参数</p>
+<blockquote>
+<p>RefType是一种引用类型，就是去掉int等基本类型之后的数据</p>
+</blockquote>
+<blockquote>
+<p>IntegralType  与上面相反的，必要类型</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/h0ld1rs/image/image/20211207214743.png"></p>
+<h3 id="其他师傅的文章例子"><a href="#其他师傅的文章例子" class="headerlink" title="其他师傅的文章例子"></a>其他师傅的文章例子</h3><p><a target="_blank" rel="noopener" href="https://ssst0n3.github.io/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/%E9%9D%99%E6%80%81%E4%BB%A3%E7%A0%81%E6%89%AB%E6%8F%8F/AST/codeql/codeql%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E6%88%96%E5%88%86%E6%9E%90%E5%AE%9E%E8%B7%B5/%E6%88%91%E6%98%AF%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8codeql%E6%8C%96%E6%8E%98CVE-2021-31856Meshery-sqli%E7%9A%84.html">https://ssst0n3.github.io/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/%E9%9D%99%E6%80%81%E4%BB%A3%E7%A0%81%E6%89%AB%E6%8F%8F/AST/codeql/codeql%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E6%88%96%E5%88%86%E6%9E%90%E5%AE%9E%E8%B7%B5/%E6%88%91%E6%98%AF%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8codeql%E6%8C%96%E6%8E%98CVE-2021-31856Meshery-sqli%E7%9A%84.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://ssst0n3.github.io/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/%E9%9D%99%E6%80%81%E4%BB%A3%E7%A0%81%E6%89%AB%E6%8F%8F/AST/codeql/codeql%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97.html">https://ssst0n3.github.io/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/%E9%9D%99%E6%80%81%E4%BB%A3%E7%A0%81%E6%89%AB%E6%8F%8F/AST/codeql/codeql%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97.html</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">h0ld1rs</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://h0ld1rs.github.io/posts/7090.html">https://h0ld1rs.github.io/posts/7090.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://h0ld1rs.github.io" target="_blank">h0ld1rs的博客</a>！</span></div></div><div class="tag_share"><div class="post_share"><div class="social-share" data-image="/img/image/14.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/posts/42607.html"><img class="next-cover" src="/img/image/9.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">java字节码加载的相关笔记</div></div></a></div></nav><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/1.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">h0ld1rs</div><div class="author-info__description">希望能认识更多师傅，学到更多东西</div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">14</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">4</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/h0ld1rs"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#codeql%E5%85%A5%E9%97%A8"><span class="toc-number">1.</span> <span class="toc-text">codeql入门</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Codeql%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-number">1.2.</span> <span class="toc-text">Codeql基本概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">1.2.1.</span> <span class="toc-text">是什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E8%8C%83%E5%BC%8F"><span class="toc-number">1.2.2.</span> <span class="toc-text">漏洞挖掘范式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#QL"><span class="toc-number">1.3.</span> <span class="toc-text">QL</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#codeql%E7%9A%84%E5%AE%89%E8%A3%85"><span class="toc-number">1.4.</span> <span class="toc-text">codeql的安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%B8%AA%E7%BB%83%E4%B9%A0codeql%E8%AF%AD%E6%B3%95%E7%9A%84github%E9%A1%B9%E7%9B%AE"><span class="toc-number">1.5.</span> <span class="toc-text">一个练习codeql语法的github项目</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#codeql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%93%8D%E4%BD%9C"><span class="toc-number">1.6.</span> <span class="toc-text">codeql数据库操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E4%B8%AAcodeql%E4%BB%A3%E7%A0%81"><span class="toc-number">1.7.</span> <span class="toc-text">第一个codeql代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95"><span class="toc-number">1.8.</span> <span class="toc-text">语法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%93%E8%AF%8D"><span class="toc-number">1.8.1.</span> <span class="toc-text">谓词</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E6%97%A0%E8%BF%94%E5%9B%9E%E5%80%BC%E7%9A%84%E8%B0%93%E8%AF%8D"><span class="toc-number">1.8.1.1.</span> <span class="toc-text">1. 无返回值的谓词</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E6%9C%89%E8%BF%94%E5%9B%9E%E5%80%BC%E7%9A%84%E8%B0%93%E8%AF%8D"><span class="toc-number">1.8.1.2.</span> <span class="toc-text">2. 有返回值的谓词</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B1%BB"><span class="toc-number">1.8.2.</span> <span class="toc-text">类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B1%BB%E5%BA%93"><span class="toc-number">1.8.3.</span> <span class="toc-text">类库</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Type"><span class="toc-number">1.8.3.1.</span> <span class="toc-text">Type</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Generics"><span class="toc-number">1.8.3.2.</span> <span class="toc-text">Generics</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Variable"><span class="toc-number">1.8.3.3.</span> <span class="toc-text">Variable</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AST%E6%8A%BD%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91"><span class="toc-number">1.8.4.</span> <span class="toc-text">AST抽象语法树</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Metadata%EF%BC%88%E5%85%83%E6%95%B0%E6%8D%AE%EF%BC%89"><span class="toc-number">1.8.5.</span> <span class="toc-text">Metadata（元数据）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE-source%E5%92%8Csink"><span class="toc-number">1.8.6.</span> <span class="toc-text">设置 source和sink</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Flow%E6%95%B0%E6%8D%AE%E6%B5%81"><span class="toc-number">1.8.7.</span> <span class="toc-text">Flow数据流</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9D%E6%AD%A5codeql%E4%BB%A3%E7%A0%81"><span class="toc-number">1.9.</span> <span class="toc-text">初步codeql代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%94%99%E8%AF%AF%E4%BF%AE%E6%94%B9"><span class="toc-number">1.10.</span> <span class="toc-text">错误修改</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E6%94%B92"><span class="toc-number">1.11.</span> <span class="toc-text">修改2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Lombok%E9%97%AE%E9%A2%98"><span class="toc-number">1.12.</span> <span class="toc-text">Lombok问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E7%BB%88%E4%BC%98%E5%8C%96"><span class="toc-number">1.13.</span> <span class="toc-text">最终优化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#codeql%E8%BF%9B%E9%98%B6"><span class="toc-number">1.14.</span> <span class="toc-text">codeql进阶</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%92%E5%BD%92%E9%97%AE%E9%A2%98"><span class="toc-number">1.15.</span> <span class="toc-text">递归问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%BA%E5%88%B6%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E9%97%AE%E9%A2%98"><span class="toc-number">1.16.</span> <span class="toc-text">强制类型转换问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E5%B8%88%E5%82%85%E7%9A%84%E6%96%87%E7%AB%A0%E4%BE%8B%E5%AD%90"><span class="toc-number">1.16.1.</span> <span class="toc-text">其他师傅的文章例子</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/7090.html" title="codeql入门"><img src="/img/image/14.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="codeql入门"/></a><div class="content"><a class="title" href="/posts/7090.html" title="codeql入门">codeql入门</a><time datetime="2022-03-14T03:11:58.000Z" title="发表于 2022-03-14 11:11:58">2022-03-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/42607.html" title="java字节码加载的相关笔记"><img src="/img/image/9.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="java字节码加载的相关笔记"/></a><div class="content"><a class="title" href="/posts/42607.html" title="java字节码加载的相关笔记">java字节码加载的相关笔记</a><time datetime="2022-03-11T12:34:06.000Z" title="发表于 2022-03-11 20:34:06">2022-03-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/166.html" title="Go渗透测试笔记(七)"><img src="/img/image/8.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go渗透测试笔记(七)"/></a><div class="content"><a class="title" href="/posts/166.html" title="Go渗透测试笔记(七)">Go渗透测试笔记(七)</a><time datetime="2022-03-05T12:31:26.000Z" title="发表于 2022-03-05 20:31:26">2022-03-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/36907.html" title="Go渗透测试笔记(六)"><img src="/img/image/7.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go渗透测试笔记(六)"/></a><div class="content"><a class="title" href="/posts/36907.html" title="Go渗透测试笔记(六)">Go渗透测试笔记(六)</a><time datetime="2022-03-05T03:16:23.000Z" title="发表于 2022-03-05 11:16:23">2022-03-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/12296.html" title="Go渗透测试笔记(五)"><img src="/img/image/6.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go渗透测试笔记(五)"/></a><div class="content"><a class="title" href="/posts/12296.html" title="Go渗透测试笔记(五)">Go渗透测试笔记(五)</a><time datetime="2022-03-04T10:17:05.000Z" title="发表于 2022-03-04 18:17:05">2022-03-04</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/img/image/14.png')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By h0ld1rs</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"><script>(()=>{
+  const init = () => {
+    twikoo.init(Object.assign({
+      el: '#twikoo-wrap',
+      envId: 'commnet-1gmkug2k1ca99452',
+      region: '',
+      onCommentLoaded: function () {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.vemoji)'))
+      }
+    }, null))
+  }
+
+  const getCount = () => {
+    twikoo.getCommentsCount({
+      envId: 'commnet-1gmkug2k1ca99452',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(function (res) {
+      document.getElementById('twikoo-count').innerText = res[0].count
+    }).catch(function (err) {
+      console.error(err);
+    });
+  }
+
+  const runFn = () => {
+    init()
+    GLOBAL_CONFIG_SITE.isPost && getCount()
+  }
+
+  const loadTwikoo = () => {
+    if (typeof twikoo === 'object') {
+      setTimeout(runFn,0)
+      return
+    } 
+    getScript('https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js').then(runFn)
+  }
+
+  if ('Twikoo' === 'Twikoo' || !false) {
+    if (false) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = () => {
+      loadTwikoo()
+    }
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
