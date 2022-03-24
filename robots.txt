@@ -1,3 +1,4 @@
 User-agent: *
 Allow: /
 Allow: /posts/
+Sitemap: https://h0ld1rs.github.io/sitemap.xml
